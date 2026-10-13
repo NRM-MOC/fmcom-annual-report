@@ -1,0 +1,10 @@
+# Copy this file to .Renviron (same folder) and adjust. .Renviron is
+# gitignored, so these settings stay on your computer. Restart R after
+# changing it.
+
+# Where the data folder is. Leave out to use data/ inside the project.
+# FMCOM_DATA_DIR=X:/path/to/shared/data
+
+# Local HARSAT checkout to load with devtools::load_all(). Leave out to use
+# the installed harsat package.
+# HARSAT_DEV_PATH=C:/Users/<you>/github/HARSAT

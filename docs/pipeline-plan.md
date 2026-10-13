@@ -13,7 +13,7 @@ All code is in R.
 - Marine and freshwater have separate scripts and separate yearly folders (e.g. `MCOM2025`, `FCOM2025`).
 - Each year, the previous year's folder is copied and the scripts are modified.
 - Each yearly folder has three subfolders, each with its own R project:
-  1. **raw_data**: reads this year's raw lab files and arranges them to match the fmcom format. The data is then submitted to SGU, where additional QC checks happen, then downloaded again from SGU and added to the fmcom database.
+  1. **raw_data**: reads this year's raw lab files and arranges them to match the fmcom format.
   2. **HARSAT**: temporarily attaches the new year's data to fmcom, runs it through HARSAT (statistical assessment tool, installed from GitHub), and produces statistics tables and figures for the report.
   3. **report**: builds the report with an R Markdown script.
 
@@ -73,7 +73,21 @@ Agreed on 2026-10-13, after reading through the MCOM2025 baseline scripts:
 
 The yearly publication is the appendix-style PDF ("Graphic and statistical overview ..."), built by `03_report/generate_appendix.R`. The old `generate_report_stuff.R` (main-report figures) is obsolete and has been removed.
 
-The pipeline is not one continuous run: there is a manual break between step 1 and step 2 for the SGU submission/QC/download round-trip. `run.R` should make that break explicit.
+### The yearly cycle and SGU
+
+Nothing in this pipeline goes to SGU. The cycle is:
+
+1. **Before the report:** last year's data, downloaded from SGU after their QC, is added to fmcom (in the fmcom repo).
+2. **The report (this pipeline):** the new year's data is read from the lab files, QC'd, temporarily attached to fmcom, and run through HARSAT, tables, figures and the report.
+3. **After the report:** the QC'd new-year data is converted and submitted to SGU through a separate pipeline, which adds another QC layer.
+4. **Next year:** that data is downloaded from SGU and added to fmcom, and the cycle starts again.
+
+The pipeline is still not one continuous run. There are **two QC checkpoints**, and `run.R` makes both explicit:
+
+1. **After step 1 (new year's data):** you review the QC output, contact labs, and add corrections before continuing to step 2.
+2. **After step 3 (the finished report):** you look through the report for oddities and contact labs where needed. After correcting, you re-run all three steps.
+
+Today both checkpoints are visual, human review. **Later:** make more of the step 1 QC automatic, with scripted checks (e.g. values outside the historical range, unexpected LOQ patterns, missing samples) that flag problems before anyone looks at plots.
 
 ## Principles for handling yearly changes
 

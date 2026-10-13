@@ -1,0 +1,12 @@
+# Settings for the marine programme (Swedish National Monitoring Programme
+# for Contaminants in Marine Biota). Update `year` each new report; other
+# values change only when the method changes.
+
+programme: marine
+water_type: Marine   # value of fmcom$water_type for this programme
+year: 2025           # last year of data included in the report
+
+harsat:
+  # One HARSAT run per substance group, in this order
+  substance_groups: [metals, PFAS, pes_sol, PCB_PCDDF, PAH, BFR]
+  recent_trend: 10   # years used for the "recent trend"
