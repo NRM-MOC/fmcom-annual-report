@@ -1,0 +1,157 @@
+---
+title: "Graphic and statistical overview of temporal trends and spatial variations in the Swedish National Monitoring Programme for Contaminants in Marine Biota (including data through 2024)"
+author:
+- Anne L. Soerensen, Conny Jonsson, Anders Forsberg, Nellie Stjärnkvist, 
+- and Suzanne Faxneld
+output:
+  rmarkdown::pdf_document:
+    keep_tex: true
+    fig_caption: yes        
+    includes:  
+      in_header: preamble-latex.tex
+bibliography: appendix_2025_data.bib
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(readxl)
+library(kableExtra)
+library(knitr)
+library(ggmap)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(cowplot)
+library(ggspatial)
+library(scales)
+library(sf)
+library(MoCiS.tools)
+order_figs <- function(file_names){
+ tibble(LOC = str_sub(file_names, 1, 4), file_names = file_names) %>% 
+    left_join(tibble(LOC = unique(statorder()$hav$loc),
+                     order = 1:29)) %>% 
+    arrange(order) %>% 
+    pull(file_names)
+}
+options(knitr.kable.NA = '')
+tabcap <- "Parameters: n year all: number of years in time series; n year fit: number years included in analysis; years: sampling time span; p nonlinear: significance of a nonlinear change in the log concentrations over the period; p linear: significance of a linear change in the log concentrations over the period; p overall: significance of a change in the log concentrations over the period; linear change: estimated change (in percent per year) in mean concentration between start and end of the time series; p linear change: the significance of the change; detectable change: the percentage annual increase in concentration that would be detected with 90$\\%$ power using a test at the 5$\\%$ significance level given 10 years of annual monitoring; recent change: estimated change (in percent per year) in the mean concentration for the last 10 years; p recent change: the significance of the recent change; mean last year: the fitted mean concentration in the last year; climit last year: the upper one-sided 95$\\%$ confidence limit on the fitted mean concentration in the last year; threshold: EQS, EAC or other applicable threshold."
+```
+
+
+### Citation
+Please cite as: Soerensen, A.L., J. C. Jonsson, A. Forsberg, N. Stjärnkvist, S. Faxneld (2025). Graphic and statistical overview of temporal trends and spatial variations within the Swedish National Monitoring Programme for Contaminants in Marine Biota (including data through 2024), Swedish Museum of Natural History, Stockholm, Sweden.
+
+##### Picture front page 
+Ludvig Palmheden
+
+### Acknowledgements for chemical analysis
+
+##### Chlorinated pesticides, polychlorinated biphenyls and brominated flame retardants
+Swedish Food Agency: 
+Tatiana Cantillana (project leader), Linda Amdahl (chemist)
+
+##### Per and polyflouroalkyl substances (PFAS)
+Swedish University of Agricultural Sciences (SLU): 
+Lutz Ahrens (project leader), Marija Lukaric (research engineer)
+
+##### Trace metals
+Stockholm University: 
+Sofi Jonsson (project leader), Pär Hjelmquist and Frida Edberg (chemist)
+
+##### Stable isotopes
+Stockholm University: 
+Sofi Jonsson (project leader), Pär Hjelmquist (chemist)
+
+##### PCDD/F and dl-PCBs
+Umeå University: Peter Haglund (project leader and chemist)
+
+##### Polycyclic aromatic hydrocarbons (PAHs)
+IVL Swedish Environmental Research Institute:
+Ann Sjöblom (project leader and chemist)
+
+
+
+# Introduction
+This report present a graphic and statistical overview of temporal trends and spatial variations within the Swedish National Monitoring Programme for Contaminants in Marine Biota. For a more in depth presentation of the monitoring program (sampling area, collected specimen and contaminants included in the program, sampling and analytical methods) and a discussion of results we refer to the report @Soerensen2025marine and article @Ammar2024. 
+
+
+### Method updates since the publication of @Soerensen2025marine
+The sum for PFAS-24 (PFOA-equivalents) is preliminary introduced in the report. It is calculated based on the seven PFAS most important to the total sum (PFOS, PFOA, PFNA, PFDA, PFUnDA, PFDoDA, PFTrDA) accounting for >99% of the total PFOA-equivalent sum. A muscle to liver conversion factor of 13.3, based on 219 fish with paired muscle and liver samples, is used to convert the proposed PFAS-24 EQS from a muscle to liver value.
+
+
+#	Statistical treatment
+
+## Data treatment
+
+Time series of contaminant concentrations in biota are assessed by the use of the Harmonized Regional Seas Assessment Tool [@harsat2024]:
+
+The concentrations are log transformed and changes in the log concentrations over time are modelled using linear mixed models. The type of temporal change that is considered depends on the number of years of data:
+
+1-2 years: no model is fitted because there are insufficient data;
+
+3-4 years: concentrations are assumed to be stable over time and the mean log concentration is estimated;
+
+5-6 years: a linear trend in log concentration is fitted;
+
+7+ years: more complex (smooth) patterns of change over time are modelled.
+
+A detailed description of the statistics can be found at: https://dome.ices.dk/ohat/trDocuments/2025/help_methods_biota_contaminants.html  
+
+Due to the large number of regression analysis that underlies the statistic results, no formal checks of all statistical model results are done.
+
+## Thresholds
+
+EQS used can be found in @HVMFS2019. Choice and tissue conversions of EQS, EAC or other applicable thresholds are explained in @Soerensen2025marine.
+
+
+# Description of figures and tables
+
+## Figures of spatial variation
+
+### Mean concentration
+
+Spatial visualisation of fitted mean concentrations of contaminants in
+marine biota at the different sampling sites for the latest year.
+
+*Map*: fitted mean concentrations at individual sites visualised by filled circles. The color scale range from light blue (low concentration) to dark blue (high concentration), grey circles indicates that no mean could be fitted. For sampling sites with data collection in both spring and autumn (Ängskärsklubb and Utlängan), the circle representing spring is shifted slightly to the east. If the fitted mean concentration exceeds a threshold, the outer circle is colored red. If the threshold is expressed in a different unit than the
+concentration given in the figure, the threshold is recalculated and adjusted to be comparable with the
+presented data. The recalculation is based on the mean value (over the entire time series) for e.g. %
+lipid weight, or % dry weight in percent for each site.
+
+*Barplot*: fitted mean concentrations visualised by a barplot to allow for quantification and easy comparison between sites. Each bar has the same color as its corresponding circle.
+
+### Trends
+
+Spatial visualisation of estimated trends in  concentrations of contaminants in
+marine biota at the different sampling sites for the last ten years. For quantification of the significance of trends, see the corresponding row in the summary table.
+
+*Map*: trends at individual sites (visualized by filled circles) for the past ten years expressed as the yearly percentage. The color of the circles express the strength of the trend from dark blue (strong negative trend) over white (no trend) to dark red (strong positive trend). For sampling sites with data collection in both spring and autumn (Ängskärsklubb and Utlängan), the circle representing the spring trend is shifted slightly to the east.
+
+*Barplot*: estimated trends (as described above, yearly percentage) visualised by a barplot to allow for quantification and easy comparison between sites. Each bar has the same color as its corresponding circle. 
+
+
+## Summary tables
+
+Statistical summary of the time trends of contaminants in marine biota for
+different sampling sites and species. Consult table captions for detailed information.
+
+## Figures of time series
+
+Time trends of contaminants in marine biota for sampling sites
+and species over the entire sampling period:
+
+*Y-axis units for contaminants*: $ww$: wet weight; $dw$: dry weight; $lw$: lipid weight;
+
+*Data*: Small points represent the measured concentration in an individual or a pooled sample (i.e. one
+point equals one observation); Big circular points represents annual geometric mean values; Orange color indicates observations under the limit of quantification (LOQ).
+
+*Trend lines*: 1-2 years: no model is fitted because there are insufficient data;
+3-4 years: concentrations are assumed to be stable over time and the mean log concentration is estimated;
+5-6 years: a linear trend in log concentration is fitted;
+7+ years: more complex (smooth) patterns of change over time are modelled.
+
+*Threshold*: indicated by a punctuated line and a green area beneath. Thresholds are recalculated 
+(expressed in the same unit as the time series data) for substances
+where the existing recommended value is expressed in a different unit than the presented data in the
+figure. The adjustment is done based on the mean value (for the entire time series at each site) of the
+variable used for the recalculation (e.g. $lw$%, $dw$%).

@@ -1,0 +1,30 @@
+
+### Blue mussel
+
+#### Summary statistics
+
+```{r, results = "asis", echo = FALSE}
+if (file.exists("../MCOM25_HARSAT/output/MCoM_2025_10L/tables/{{var}}_mussel_table.csv")){
+  read_csv("../MCOM25_HARSAT/output/MCoM_2025_10L/tables/{{var}}_mussel_table.csv") %>%
+    kable("latex", booktabs = TRUE, escape = FALSE, align = c(rep("l", 2), rep("r", 14)),
+          caption = paste("{{var_name}} in Blue mussel.", tabcap)) %>%
+    add_header_above(c(" "=5, "Whole time period"=6, "Last 10 years"=2)) %>% 
+    kable_styling(latex_options = c("scale_down", "hold_position"))
+} else
+{
+  print(paste("../MCOM25_HARSAT/output/MCoM_2025_10L/tables/{{var}}_mussel_table.csv", "is missing"))
+  
+}
+```
+
+
+#### Station time-series
+
+```{r, fig.width = 4, out.width = "0.33\\textwidth", fig.asp= 1.3, echo = FALSE}
+plot_files <- dir("../MCOM25_HARSAT/output/MCoM_2025_10L/figs/") %>% 
+  subset(., str_detect(., "MYTI_{{var}}.pdf")) %>% 
+  order_figs() %>% 
+  paste0("../MCOM25_HARSAT/output/MCoM_2025_10L/figs/", .) %>% 
+  subset(., file.exists(.))
+knitr::include_graphics(plot_files)
+```

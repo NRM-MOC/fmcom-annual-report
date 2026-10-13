@@ -1,0 +1,108 @@
+SGU_Label;NRM_PARAMETERKOD;contaminant;substance_group;contaminant_full_name;contaminant_alt_name;CAS_number
+Dibutyltenn-jon;DIBT;DIBT;Organotin compounds;Dibutyltin ion;;1002-53-5
+Dioktyltenn - opecificerade atomer/molekyler bundna till dioktyltenn;DIOT;DIOT;Organotin compounds;Dioctyltin;;-
+Difenyltenn-jon;DIPT;DIPT;Organotin compounds;Diphenyltin ion;;-
+Monobutyltenn-jon;MBT;MBT;Organotin compounds;Monobutyltin ion;;78763-54-9
+Monooktyltenn-jon;MOT;MOT;Organotin compounds;Monooctyltin ion;;-
+Monofenyltenn-jon;MPT;MPT;Organotin compounds;Monophenyltin ion;;-
+Tributyltenn-jon;TBT;TBT;Organotin compounds;Tributyltin ion;;36643-28-4
+Trifenyltenn-jon;TPT;TPT;Organotin compounds;Triphenyltin ion;;668-34-8
+Kvicksilver;HGFSI;Hg;Metals;Mercury;Hg;7439-97-6
+Silver;AGTSI;Ag;Metals;Silver;Ag;7440-22-4
+Aluminium;ALTSI;Al;Metals;Aluminium;Al ;7429-90-5
+Arsenik;ASTSI;As;Metals;Arsenic;As;7440-38-2
+Kadmium;CDTSI;Cd;Metals;Cadmium;Cd;7440-43-9
+Krom;CRTSI;Cr;Metals;Chromium;Cr;7440-47-3
+Koppar;CUTSI;Cu;Metals;Copper;Cu;7440-50-8
+Nickel;NITSI;Ni;Metals;Nickel;Ni;7440-02-0
+Bly;PBTSI;Pb;Metals;Lead;Pb;7439-92-1
+Antimon;SBTSI;Sb;Metals;Antimon;Sb;7440-36-0
+Selen;SETSI;Se;Metals;Selenium;Se;7782-49-2
+Tenn;SNTSI;Sn;Metals;Tin;Sn;7440-31-5
+Zink;ZNTSI;Zn;Metals;Zinc;Zn;7440-66-6
+Perfluorhexansyra (PFHxA), linjär;PFHXA;PFHXA;PFAS;Perfluorohexanoic acid, linear;PFHxA-linear;307-24-4
+Perfluorheptansyra (PFHpA), linjär;PFHPA;PFHPA;PFAS;Perfluoroheptanoic acid, linear;PFHpA-linear;375-85-9
+Perfluoroktansyra (PFOA), linjär;PFOA;PFOA;PFAS;Perfluorooctanoic acid, linear;PFOA-linear;335-67-1
+Perfluornonansyra (PFNA), linjär;PFNA;PFNA;PFAS;Perfluorononanoic acid, linear;PFNA-linear;375-95-1
+Perfluordekansyra (PFDA), linjär;PFDA;PFDA;PFAS;Perfluorodecanoic acid, linear;PFDA-linear;335-76-2
+Perfluorundekansyra (PFUnDA), linjär;PFUNDA;PFUNDA;PFAS;Perfluoroundecanoic acid, linear;PFUnDA-linear;2058-94-8
+Perfluordodekansyra (PFDoDA), linjär;PFDODA;PFDODA;PFAS;Perfluorododecanoic acid, linear;PFDoDA-linear;307-55-1
+Perfluortridekansyra (PFTriDA), linjär;PFTRDA;PFTRDA;PFAS;Perfluorotridecanoic acid, linear;PFTriDA-linear;72629-94-8
+Perfluortetradekansyra (PFTeDA), linjär;PFTEDA;PFTEDA;PFAS;Perfluorotetradecanoic acid, linear;PFTeDA-linear;376-06-7
+Perfluorpentadekansyra (PFPeDA), linjär;PFPEDA;PFPEDA;PFAS;Perfluoropentadecanoic acid, linear;PFPeDA-linear;141074-63-7
+Perfluoroktansulfonamid (FOSA), linjär;LFOSA;LFOSA;PFAS;Perfluorooctane sulfonamide, linear;FOSA-linear;754-91-6
+Perfluoroktansulfonamid (FOSA), grenad;BFOSA;BFOSA;PFAS;Perfluorooctane sulfonamide, branched;FOSA-branched;-
+Perfluorbutansulfonsyra (PFBS), linjär;LPFBS;LPFBS;PFAS;Perfluorobutanesulfonic acid, linear;PFBS-linear;375-73-5 OBS (and several others)
+Perfluorhexansulfonsyra (PFHxS), linjär;LPFHXS;LPFHXS;PFAS;Perfluorohexanesulfonic acid, linear;PFHxS-linear;355-46-4
+Perfluorhexansulfonsyra (PFHxS), grenad;BPFHXS;BPFHXS;PFAS;Perfluorohexanesulfonic acid, branched;PFHxS-branched;-
+Perfluoroktansulfonsyra (PFOS), linjär;LPFOS;LPFOS;PFAS;Perfluorooctanesulfonic acid, linear;PFOS-linear;"1763-23-1; 132324-11-9"
+Perfluoroktansulfonsyra (PFOS), grenad;BPFOS;BPFOS;PFAS;Perfluorooctanesulfonic acid, branched;PFOS-branched;-
+Perfluordekansulfonsyra (PFDS), linjär;LPFDS;LPFDS;PFAS;Perfluorodecanesulfonic acid, linear;PFDS-linear;335-77-3
+Perfluordekansulfonsyra (PFDS), grenad;BPFDS;BPFDS;PFAS;Perfluorodecanesulfonic acid, branched;PFDS-branched;-
+2,3,7,8-Tetraklordibenso-p-dioxin (2,3,7,8-TCDD);TCDD;TCDD;Dioxins and furans;2,3,7,8-Tetrachlorodibenzo-p-dioxin;2,3,7,8-TCDD;1746-01-6
+1,2,3,7,8-Pentaklordibenso-p-dioxin (1,2,3,7,8-PeCDD);PECDD;PECDD;Dioxins and furans;1,2,3,7,8-Pentachlorodibenzo-p-dioxin;1,2,3,7,8-PeCDD;40321-76-4
+1,2,3,4,7,8-Hexaklordibenso-p-dioxin (1,2,3,4,7,8-HxCDD);HXCDD1;HXCDD1;Dioxins and furans;1,2,3,4,7,8-Hexachlorodibenzo-p-dioxin;1,2,3,4,7,8-HxCDD;39227-28-6
+1,2,3,6,7,8-Hexaklordibenso-p-dioxin (1,2,3,6,7,8-HxCDD);HXCDD2;HXCDD2;Dioxins and furans;1,2,3,6,7,8-Hexachlorodibenzo-p-dioxin;1,2,3,6,7,8-HxCDD;57653-85-7
+1,2,3,7,8,9-Hexaklordibenso-p-dioxin (1,2,3,7,8,9-HxCDD);HXCDD3;HXCDD3;Dioxins and furans;1,2,3,7,8,9-Hexachlorodibenzo-p-dioxin;1,2,3,7,8,9-HCDD;19408-74-3
+1,2,3,4,6,7,8-Heptaklordibenso-p-dioxin (1,2,3,4,6,7,8-HpCDD);HPCDD;HPCDD;Dioxins and furans;1,2,3,4,6,7,8-Heptachlorodibenzo-p-dioxin;1,2,3,4,6,7,8-HpCDD;35822-46-9
+1,2,3,4,6,7,8,9-Oktaklordibenso-p-dioxin (1,2,3,4,6,7,8,9-OCDD);OCDD;OCDD;Dioxins and furans;1,2,3,4,6,7,8,9-Octachlorodibenzo-p-dioxin;1,2,3,4,6,7,8,9-OCDD;3268-87-9
+2,3,7,8-Tetraklordibensofuran (2,3,7,8-TCDF);TCDF;TCDF;Dioxins and furans;2,3,7,8-Tetrachlorodibenzofuran;2,3,7,8-TCDF;51207-31-9
+1,2,3,7,8-Pentaklordibensofuran (1,2,3,7,8-PeCDF);PECDF1;PECDF1;Dioxins and furans;1,2,3,7,8-Pentachlorodibenzofuran;1,2,3,7,8-PeCDF;57117-41-6
+2,3,4,7,8-Pentaklordibensofuran (2,3,4,7,8-PeCDF);PECDF2;PECDF2;Dioxins and furans;2,3,4,7,8-Pentachlorodibenzofuran;2,3,4,7,8-PeCDF;57117-31-4
+1,2,3,4,7,8-Hexaklordibensofuran (1,2,3,4,7,8-HxCDF);HXCDF1;HXCDF1;Dioxins and furans;1,2,3,4,7,8-Hexachlorodibenzofuran;1,2,3,4,7,8-HxCDF;70648-26-9
+1,2,3,6,7,8-Hexaklordibensofuran (1,2,3,6,7,8-HxCDF);HXCDF2;HXCDF2;Dioxins and furans;1,2,3,6,7,8-Hexachlorodibenzofuran;1,2,3,6,7,8-HxCDF;57117-44-9
+2,3,4,6,7,8-Hexaklordibensofuran (2,3,4,6,7,8-HxCDF);HXCDF3;HXCDF3;Dioxins and furans;2,3,4,6,7,8-Hexachlorodibenzofuran;2,3,4,6,7,8-HxCDF;60851-34-5
+1,2,3,7,8,9-Hexaklordibensofuran (1,2,3,7,8,9-HxCDF);HXCDF4;HXCDF4;Dioxins and furans;1,2,3,7,8,9-Hexachlorodibenzofuran;1,2,3,7,8,9-HxCDF;72918-21-9
+1,2,3,4,6,7,8-Heptaklordibensofuran (1,2,3,4,6,7,8-HpCDF);HPCDF1;HPCDF1;Dioxins and furans;1,2,3,4,6,7,8-Heptachlorodibenzofuran;1,2,3,4,6,7,8-HpCDF;67562-39-4
+1,2,3,4,7,8,9-Heptaklordibensofuran (1,2,3,4,7,8,9-HpCDF);HPCDF2;HPCDF2;Dioxins and furans;1,2,3,4,7,8,9-Heptachlorodibenzofuran;1,2,3,4,7,8,9-HpCDF;55673-89-7
+1,2,3,4,6,7,8,9-Oktaklordibensofuran (1,2,3,4,6,7,8,9-OCDF);OCDF;OCDF;Dioxins and furans;1,2,3,4,6,7,8,9-Octachlorodibenzofuran;1,2,3,4,6,7,8,9-OCDF;39001-02-0
+Naftalen;NAP;NAP;PAH;Naphthalene;;91-20-3
+Acenaften;ACNE;ACNE;PAH;Acenaphthene;;83-32-9
+Fluoren;FLE;FLE;PAH;Fluorene;;86-73-7
+Fenantren;PA;PA;PAH;Phenanthrene;;1985-01-08
+Antracen;ANT;ANT;PAH;Anthracene;;120-12-7
+Fluoranten;FLU;FLU;PAH;Fluoranthene;;206-44-0
+Pyren;PYR;PYR;PAH;Pyrene;;129-00-0
+Benso[a]antracen;BAA;BAA;PAH;Benzo[a]anthracene;;56-55-3
+Krysen;CHR;CHR;PAH;Chrysene;;218-01-9
+Benso[b]fluoranten;BBF;BBF;PAH;Benzo[b]fluoranthene;;205-99-2
+Benso[k]fluoranten;BKF;BKF;PAH;Benzo[k]fluoranthene;;207-08-9
+Benso[a]pyren;BAP;BAP;PAH;Benzo[a]pyrene;;50-32-8
+Dibenso[a,h]antracen;DBAHA;DBAHA;PAH;Dibenzo[a,h]anthracene;;53-70-3
+Benso[ghi]perylen;BGHIP;BGHIP;PAH;Benzo[ghi]perylene;;191-24-2
+Indeno[1,2,3-cd]pyren;ICDP;ICDP;PAH;Indeno[1,2,3-cd]pyrene;;193-39-5
+DDE (p,p');DDEK;DDE;Pesticides;DDE (p,p');DDE;72-55-9
+DDD (p,p');DDDK;DDD;Pesticides;DDD (p,p');DDD;72-54-8
+DDT (p,p');DDTK;DDT;Pesticides;DDT (p,p');DDT;50-29-3
+Lindan (gamma-HCH);LINDAN;LINDAN;Pesticides;gamma-HCH;;58-89-9
+alfa-HCH (alfa-Hexaklorcyclohexan);AHCH;AHCH;Pesticides;alpha-Hexachlorocyclohexane;alpha-HCH;319-84-6
+beta-HCH (beta-Hexaklorcyklohexan);BHCH;BHCH;Pesticides;beta-Hexachlorocyclohexane;beta-HCH;319-85-7
+Hexaklorbensen;HCB;HCB;Solvents;Hexachlorobenzene;HCB;118-74-1
+2,4,4'-Triklorbifenyl (PCB28);CB-28;CB28;PCBs;2,4,4'-Trichlorobiphenyl;PCB28;7012-37-5
+2,2',5,5'-Tetraklorbifenyl (PCB52);CB-52;CB52;PCBs;2,2',5,5'-Tetrachlorobiphenyl;PCB52;35693-99-3
+2,2',4,5,5'-Pentaklorbifenyl (PCB101);CB-101;CB101;PCBs;2,2',4,5,5'-Pentachlorobiphenyl;PCB101;37680-73-2
+2,3',4,4',5-Pentaklorbifenyl (PCB118);CB-118;CB118_ndl;PCBs;2,3',4,4',5-Pentachlorobiphenyl;PCB118;31508-00-6
+2,2',4,4',5,5'-Hexaklorbifenyl (PCB153);CB-153;CB153;PCBs;2,2',4,4',5,5'-Hexachlorobiphenyl;PCB153;35065-27-1
+PCB138 + PCB163;CB-138;CB138;PCBs;2,2?,3,4,4?,5?-Hexachlorobiphenyl, 2,2?,3,4,4?,5?-PCB;;35065-28-2
+2,2',3,4,4',5,5'-Heptaklorbifenyl (PCB180);CB-180;CB180;PCBs;2,2',3,4,4',5,5'-Heptachlorobiphenyl;PCB180;35065-29-3
+3,3',4,4'-Tetraklorbifenyl (PCB77);CB-77;CB77;PCBs;3,3',4,4'-Tetrachlorobiphenyl;PCB77;32598-13-3
+3,4,4',5-Tetraklorbifenyl (PCB81);CB-81;CB81;PCBs;3,4,4',5-Tetrachlorobiphenyl;PCB81;70362-50-4
+2,3,3',4,4'-Pentaklorobifenyl (PCB105);CB-105;CB105;PCBs;2,3,3',4,4'-Pentachlorobiphenyl;PCB105;32598-14-4
+2,3,4,4',5-Pentaklorbifenyl (PCB114);CB-114;CB114;PCBs;2,3,4,4',5-Pentachlorobiphenyl;PCB114;74472-37-0
+2,3',4,4',5-Pentaklorbifenyl (PCB118)U;CB-118U;CB118;PCBs;2,3',4,4',5-Pentachlorobiphenyl;PCB118;31508-00-6
+2,3',4,4',5'-Pentaklorbifenyl (PCB123);CB-123;CB123;PCBs;2,3',4,4',5'-Pentachlorobiphenyl;PCB123;65510-44-3
+3,3',4,4',5-Pentaklorbifenyl (PCB126);CB-126;CB126;PCBs;3,3',4,4',5-Pentachlorobiphenyl;PCB126;57465-28-8
+2,3,3',4,4',5-Hexaklorbifenyl (PCB156);CB-156;CB156;PCBs;2,3,3',4,4',5-Hexachlorobiphenyl;PCB156;38380-08-4
+2,3,4,3',4',5'-Hexaklorbifenyl (PCB157);CB-157;CB157;PCBs;2,3,4,3',4',5'-Hexachlorobiphenyl;PCB157;69782-90-7
+2',3,4,4',5,5'-Hexaklorbifenyl (PCB167);CB-167;CB167;PCBs;2',3,4,4',5,5'-Hexachlorobiphenyl;PCB167;52663-72-6
+3,3',4,4',5,5'-Hexaklorbifenyl (PCB169);CB-169;CB169;PCBs;3,3',4,4',5,5'-Hexachlorobiphenyl;PCB169;32774-16-6
+2,3,3',4,4',5,5'-Heptaklorbifenyl (PCB189);CB-189;CB189;PCBs;2,3,3',4,4',5,5'-Heptachlorobiphenyl;PCB189;39635-31-9
+2,2',4,4'-Tetrabromdifenyleter (PBDE47);BDE-47;BDE47;BFRs;2,2',4,4'-Tetrabromodiphenyl ether;PBDE47;5436-43-1
+2,2',4,4',5-Pentabromdifenyleter (PBDE99);BDE-99;BDE99;BFRs;2,2',4,4',5-Pentabromodiphenyl ether;PBDE99;60348-60-9
+2,2',4,4',6-Pentabromdifenyleter (PBDE100);BDE-100;BDE100;BFRs;2,2',4,4',6-Pentabromodiphenyl ether;PBDE100;189084-64-8
+2,2',4,4',5,5'-Hexabromdifenyleter (PBDE153);BDE-153;BDE153;BFRs;2,2',4,4',5,5'-Hexabromodiphenyl ether;PBDE153;68631-49-2
+2,2',4,4',5,6'-Hexabromdifenyleter (PBDE154);BDE-154;BDE154;BFRs;2,2',4,4',5,6'-Hexabromodiphenyl ether;PBDE154;207122-15-4
+Hexabromcyklododekan (HBCD);HBCD;HBCD;BFRs;Hexabromocyclododecane;HBCD;"25637-99-4; 3194-55-6"
+2,4,4'-Tribromdifenyleter (PBDE28);BDE-28;BDE28;BFRs;2,4,4'-Tribromodiphenyl ether;PBDE28;41318-75-6
+Dioktyltenn-jon;DIOT;DIOT;Organotin compounds;Dioctyltin;;-
+Vismut;BI;Bi;Metals;Bismuth;Bi;7440-69-9.
