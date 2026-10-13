@@ -50,6 +50,9 @@ rsconnect/
 /data/
 /output/
 
+# HARSAT output (written next to wherever HARSAT runs)
+oddities/
+
 # renv package library
 renv/library/
 
