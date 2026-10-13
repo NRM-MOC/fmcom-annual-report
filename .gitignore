@@ -40,11 +40,15 @@ vignettes/*.pdf
 .Renviron
 .env
 
-# pkgdown site
-docs/
-
 # translation temp files
 po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Pipeline data and generated output (never commit raw lab data)
+/data/
+/output/
+
+# renv package library
+renv/library/
