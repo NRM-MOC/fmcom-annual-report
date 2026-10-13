@@ -90,6 +90,8 @@ The pipeline is not one continuous run: there is a manual break between step 1 a
 - Whether to record a checksum of the frozen file in the run output, so we can verify it's the same file.
 - Whether fmcom should get git tags or releases per data update (e.g. `v0.3.0`). The version is in its `DESCRIPTION` but doesn't show as a release on GitHub. Tags would make it easier to see which data version a report used than a bare commit ID.
 
+- Whether to make input data available. All current input files, including the raw lab data, HARSAT input and esbase biological data, can in principle be shared. They're kept in the gitignored `data/` folder for now. If committing some of them, or publishing them elsewhere, makes the pipeline easier to run and reproduce, move them out of `.gitignore`.
+
 **Note on fmcom formats:** The local `.rds` copy of fmcom and the package's `.rda` differ slightly in some column formats but are otherwise kept in sync. Before each report, the package is updated with the previous year's data and any bug fixes, so the package (via GitHub and renv) is the source to use for the report.
 
 ## Migration plan
