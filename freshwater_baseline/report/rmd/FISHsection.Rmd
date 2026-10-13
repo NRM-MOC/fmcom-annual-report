@@ -1,0 +1,35 @@
+
+###  Pike and Arctic Char
+
+#### Summary statistics
+
+```{r, results = "asis", echo = FALSE}
+if (file.exists("../FCOM26_HARSAT/output/FCoM_2026_10L_SF/tables/{{var}}_fish_table.csv")){
+  read_csv("../FCOM26_HARSAT/output/FCoM_2026_10L_SF/tables/{{var}}_fish_table.csv") %>%
+    kable("latex", booktabs = TRUE, escape = FALSE, align = c(rep("l", 2), rep("r", 14)),
+          caption = paste("{{var_name}} in pike and arctic char.", tabcap)) %>%
+    add_header_above(c(" "=5, "Whole time period"=6, "Last 10 years"=2)) %>% 
+    kable_styling(latex_options = c("scale_down", "hold_position"))
+} else
+{
+  print(paste("../FCOM26_HARSAT/output/FCoM_2026_10L_SF/tables/{{var}}_fish_table.csv", "is missing"))
+  
+}
+```
+
+
+#### Station time-series
+
+```{r, fig.width = 4, out.width = "0.33\\textwidth", fig.asp= 1.3, echo = FALSE}
+plot_files_SALV <- dir("../FCOM26_HARSAT/output/FCoM_2026_10L_SF/figs/") %>% 
+  subset(., str_detect(., "SALV_{{var}}.pdf")) %>% 
+  order_figs()
+plot_files_ESOX <- dir("../FCOM26_HARSAT/output/FCoM_2026_10L_SF/figs/") %>% 
+  subset(., str_detect(., "ESOX_{{var}}.pdf")) %>% 
+  order_figs()
+plot_files <- paste0("../FCOM26_HARSAT/output/FCoM_2026_10L_SF/figs/", c(plot_files_SALV, plot_files_ESOX)) %>% 
+  subset(., file.exists(.))
+knitr::include_graphics(plot_files)
+```
+
+

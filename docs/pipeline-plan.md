@@ -22,6 +22,7 @@ All code is in R.
 - **One repository and one top-level R project** for both programmes. No yearly copies of the code.
 - **Start with marine** (the 2025 marine report is needed now), but design for freshwater from the start: the programme (`marine`/`freshwater`) and year are parameters.
 - **Years are handled with git tags**, not folders. Tag the commit used for each published report (e.g. `marine-2025`) so it can be reproduced exactly.
+- **Year always means the last year of data included.** For example, `marine-2025` and `output/marine_2025/` mean data through 2025. This applies to the config, output folders and tags. The old folder names were inconsistent: `MCOM25` and `FCOM26` both contained data through 2024.
 - **Development happens on the local C drive with test data.** Claude Code has no access to the shared drives. Real runs happen from a clone on the shared drive, or from a local clone with data on the shared drive.
 
 ## Target structure
