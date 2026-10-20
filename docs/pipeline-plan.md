@@ -146,6 +146,23 @@ Today both checkpoints are visual, human review. **Later:** make more of the ste
 4. Run marine 2025 through the new pipeline. Tag it `marine-2025` when the report is published.
 5. Add freshwater via `freshwater.yml`. Where scripts really differ, use `switch(programme, ...)` or programme-specific functions in `R/`.
 
+### Station names and season in the new year's data
+
+- **The fmcom convention applies:** a plain station name (e.g. "Ängskärsklubb") and season in a separate column. The lab files follow this convention, through the drop-down list in the lab spreadsheets. The old MoCiS convention ("Ängskärsklubb höst/vår") is being phased out.
+- **Season comes from the sampling date** (esbase catch date, joined by specimen ID), using the same rule as fmcom's `data-raw/adding_next_year_fmcom.R`:
+  - January–February: Winter
+  - March–June and July 1–15: Spring
+  - July 16–December: Autumn
+
+  Compare the day as a number, because of a possible bug in fmcom where July 1–9 get no season (reported as an fmcom issue).
+- **Winter samples are excluded** from the analysis, because winter conditions affect contaminant concentrations. Winter samples are no longer collected, and the few old ones have already been removed from fmcom, so this should rarely happen. If any new-year sample does fall in winter, it's left out of the analysis but **listed in the QC output** (often it will be a wrong date), not dropped silently.
+- **MoCiS2:** the code list needs a plain "Ängskärsklubb" entry (like the existing plain "Utlängan"). `moc_read_lab()` also needs `na.rm = TRUE` in the fuzzy station check, so that an unknown station gives a warning instead of an error. The user is making these changes in NRM-MOC/MoCiS2.
+
+### Later additions
+
+- **Time trends for auxiliary biological data** (age, length, weight, fat %, etc.): add these to the report once everything else is in place. HARSAT couldn't previously run these statistics. The user has added support for them in the HARSAT develop version (1.0.6.1011).
+- **Biological data for birds and mussels:** this year the report only uses the biological (esbase) data for fish. Bird and mussel biological data aren't processed yet. They're included later, when data is reported to the national database.
+
 ### Freshwater changes to bring into the shared setup
 
 These are the user's notes on changes made in the freshwater version that marine doesn't have yet:
