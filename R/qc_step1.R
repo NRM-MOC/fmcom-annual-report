@@ -10,7 +10,9 @@ qc_step1 <- function(cfg, lab, bio, new_year, master) {
     dplyr::filter(!UNIK_PARAMETERKOD %in% c(bio_codes, fraction_codes))
 
   method_keys <- paste(master$methods$SGU_analytical.method, master$methods$SGU_instrument)
-  no_bio <- new_year |> dplyr::filter(is.na(date)) |> dplyr::distinct(species, specimen_ID)
+  individuals <- lab_individuals(d) |>
+    dplyr::left_join(bio, by = c("individual" = "PROV_KOD_ORIGINAL")) |>
+    dplyr::mutate(in_esbase = individual %in% bio$PROV_KOD_ORIGINAL)
   winter <- new_year |> dplyr::filter(season %in% "Winter") |> dplyr::distinct(species, specimen_ID)
   other_year <- new_year |> dplyr::filter(!is.na(date), year != cfg$year) |>
     dplyr::distinct(specimen_ID, date)
@@ -53,8 +55,19 @@ qc_step1 <- function(cfg, lab, bio, new_year, master) {
     qc_item("Method + instrument not in the fmcom method master table",
             with(contaminant_rows, paste(lab_file, ANALYS_MET, ANALYS_INSTR, sep = " | "))[
               !paste(contaminant_rows$ANALYS_MET, contaminant_rows$ANALYS_INSTR) %in% method_keys]),
-    qc_item("Lab samples without biological data in esbase (no date; year set from config)",
-            paste(no_bio$species, no_bio$specimen_ID)),
+    # Everything sent for contaminant analysis should have biological data.
+    # Body length (used when total length can't be measured) is not in fmcom,
+    # so missing total length is not checked.
+    bio_item("Lab specimens not in esbase (no biological data)",
+             individuals, !individuals$in_esbase),
+    bio_item("Lab specimens without a collection date (year set from config, no season)",
+             individuals, individuals$in_esbase & is.na(individuals$PROVTAG_DAT)),
+    bio_item("Lab specimens without weight", individuals,
+             individuals$in_esbase & is.na(individuals$TOTV)),
+    bio_item("Lab specimens without age", individuals,
+             individuals$in_esbase & is.na(individuals$ALDR)),
+    bio_item("Lab specimens without sex", individuals,
+             individuals$in_esbase & is.na(individuals$KON)),
     qc_item("Esbase specimens of analysed species without lab data (count per species)",
             paste0(esbase_only$SPECIES, ": ", esbase_only$n, recycle0 = TRUE)),
     qc_item("Winter samples (excluded from the new-year data)",
@@ -69,6 +82,29 @@ qc_step1 <- function(cfg, lab, bio, new_year, master) {
 qc_item <- function(check, items) {
   items <- sort(unique(stats::na.omit(items)))
   tibble::tibble(check = check, n = length(items), details = paste(items, collapse = "; "))
+}
+
+# One row per lab sample and individual specimen in it (pooled samples
+# expanded). An individual analysed both alone and in a pool appears twice.
+lab_individuals <- function(d) {
+  samples <- dplyr::distinct(d, sample = PROV_KOD_ORIGINAL, species = LATIN)
+  purrr::map(seq_len(nrow(samples)), function(i) {
+    tibble::tibble(sample = samples$sample[i], species = samples$species[i],
+                   individual = unpool_ids(samples$sample[i]))
+  }) |>
+    dplyr::bind_rows()
+}
+
+# Check on individual specimens: `n` counts each individual once; details
+# list the lab samples as "species sample (affected of total individuals)"
+bio_item <- function(check, individuals, flagged) {
+  hit <- individuals[flagged, ]
+  details <- hit |>
+    dplyr::count(species, sample, name = "affected") |>
+    dplyr::left_join(dplyr::count(individuals, sample, name = "total"), by = "sample") |>
+    dplyr::mutate(text = paste0(species, " ", sample, " (", affected, " of ", total, ")"))
+  tibble::tibble(check = check, n = dplyr::n_distinct(hit$individual),
+                 details = paste(details$text, collapse = "; "))
 }
 
 # Expands pooled specimen IDs ("B2025/09461-09472") into individual IDs
