@@ -185,6 +185,21 @@ Step 1 mirrors fmcom's `data-raw/adding_next_year_fmcom.R`, which converts the S
 - The Umeå instrument code changed (`GC-MS-MS-QQQ` in 2024, `GC-MS-MS` in 2025). It needs checking with the lab, and fmcom's method master table needs adjusting.
 - A possible MoCiS2 fix: `distinct()` in `read_lab_file_ackr()`.
 
+### Checklist: adding a new contaminant
+
+For example, the new PFAS compounds that will be added over the coming years. Update these, in pipeline order, as far as the substance should go:
+
+1. **MoCiS2 code list** (`inst/extdata/codelist.xlsx`, sheet `PARAMETRAR`, in NRM-MOC/MoCiS2): needed for the lab file code to be read at all.
+   *If missing:* MoCiS2 warns "Unable to match the following substance codes", the rows are dropped, and the warning appears in `qc_step1.csv`.
+2. **fmcom master table** (`data-raw/master_tables/contaminants_SGU_NRM.csv` in NRM-MOC/fmcom): gives the SGU code its fmcom name and substance group.
+   *If missing:* `qc_step1.csv` reports "Substance codes not in the fmcom master table".
+3. **HARSAT information files** (`config/harsat/determinand.csv`, plus `thresholds_biota.csv` if there is a threshold): needed for HARSAT to assess it. If the substance is part of a sum (e.g. PFAS-24), also update `config/harsat/determinand_sums.yml`.
+   *If missing:* HARSAT leaves it out. That's intended until there are enough years of data, at least 5–10, before showing trends.
+4. **Report names** (`config/lookups/determinands.csv`): the name shown in plots, tables and the appendix, its report group and its order within the group.
+   *If missing:* step 2c warns "Assessed but not in config/lookups/determinands.csv", and the substance is left out of the appendix.
+
+If the substance belongs to a new substance group, also add the group to `harsat: groups:` in `config/<programme>.yml`.
+
 ### Later additions
 
 - **Time trends for auxiliary biological data** (age, length, weight, fat %, etc.): add these to the report once everything else is in place. HARSAT couldn't previously run these statistics. The user has added support for them in the HARSAT develop version (1.0.6.1011).

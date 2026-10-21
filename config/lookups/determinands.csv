@@ -1,0 +1,106 @@
+determinand,name,report_group,group_order,var_order
+AG,Ag,Metals,1,1
+AL,Al,Metals,1,2
+AS,As,Metals,1,3
+CD,Cd,Metals,1,4
+CR,Cr,Metals,1,5
+CU,Cu,Metals,1,6
+HG,Hg,Metals,1,7
+NI,Ni,Metals,1,8
+PB,Pb,Metals,1,9
+SE,Se,Metals,1,10
+ZN,Zn,Metals,1,11
+DDT,DDT,Chlorinated Pesticides,2,1
+DDD,DDD,Chlorinated Pesticides,2,2
+DDE,DDE,Chlorinated Pesticides,2,3
+AHCH,alpha-HCH,Chlorinated Pesticides,2,4
+BHCH,beta-HCH,Chlorinated Pesticides,2,5
+LINDAN,Lindane,Chlorinated Pesticides,2,6
+HCB,HCB,Chlorinated Pesticides,2,7
+CB28,PCB-28,Polychlorinated Biphenyls,3,1
+CB52,PCB-52,Polychlorinated Biphenyls,3,2
+CB101,PCB-101,Polychlorinated Biphenyls,3,3
+CB118,PCB-118,Polychlorinated Biphenyls,3,4
+CB138,PCB-138,Polychlorinated Biphenyls,3,5
+CB153,PCB-153,Polychlorinated Biphenyls,3,6
+CB180,PCB-180,Polychlorinated Biphenyls,3,7
+CB77,PCB-77,Polychlorinated Biphenyls,3,8
+CB81,PCB-81,Polychlorinated Biphenyls,3,9
+CB126,PCB-126,Polychlorinated Biphenyls,3,10
+CB169,PCB-169,Polychlorinated Biphenyls,3,11
+CB123,PCB-123,Polychlorinated Biphenyls,3,12
+CB114,PCB-114,Polychlorinated Biphenyls,3,13
+CB105,PCB-105,Polychlorinated Biphenyls,3,14
+CB167,PCB-167,Polychlorinated Biphenyls,3,15
+CB156,PCB-156,Polychlorinated Biphenyls,3,16
+CB157,PCB-157,Polychlorinated Biphenyls,3,17
+CB189,PCB-189,Polychlorinated Biphenyls,3,18
+TEQDLP,TCDD-equivalents (Sum WHO-PCB-TEQ),Polychlorinated Biphenyls,3,19
+TCDF,"2,3,7,8-TCDF",Polychlorinated Dibenzodioxins /-furans,4,1
+PECDF1,"1,2,3,7,8-PeCDF",Polychlorinated Dibenzodioxins /-furans,4,2
+PECDF2,"2,3,4,7,8-PeCDF",Polychlorinated Dibenzodioxins /-furans,4,3
+HXCDF1,"1,2,3,4,7,8-HxCDF",Polychlorinated Dibenzodioxins /-furans,4,4
+HXCDF2,"1,2,3,6,7,8-HxCDF",Polychlorinated Dibenzodioxins /-furans,4,5
+HXCDF3,"2,3,4,6,7,8-HxCDF",Polychlorinated Dibenzodioxins /-furans,4,6
+HXCDF4,"1,2,3,7,8,9-HxCDF",Polychlorinated Dibenzodioxins /-furans,4,7
+HPCDF1,"1,2,3,4,6,7,8-HpCDF",Polychlorinated Dibenzodioxins /-furans,4,8
+HPCDF2,"1,2,3,4,7,8,9-HpCDF",Polychlorinated Dibenzodioxins /-furans,4,9
+OCDF,"1,2,3,4,6,7,8,9-OCDF",Polychlorinated Dibenzodioxins /-furans,4,10
+TCDD,"2,3,7,8-TCDD",Polychlorinated Dibenzodioxins /-furans,4,11
+PECDD,"1,2,3,7,8-PeCDD",Polychlorinated Dibenzodioxins /-furans,4,12
+HXCDD1,"1,2,3,4,7,8-HxCDD",Polychlorinated Dibenzodioxins /-furans,4,13
+HXCDD2,"1,2,3,6,7,8-HxCDD",Polychlorinated Dibenzodioxins /-furans,4,14
+HXCDD3,"1,2,3,7,8,9-HxCDD",Polychlorinated Dibenzodioxins /-furans,4,15
+HPCDD,"1,2,3,4,6,7,8-HpCDD",Polychlorinated Dibenzodioxins /-furans,4,16
+OCDD,"1,2,3,4,6,7,8,9-OCDD",Polychlorinated Dibenzodioxins /-furans,4,17
+TEQDF,"TCDD-equivalents (Sum WHO-PCDD/F-TEQ, lw)",Polychlorinated Dibenzodioxins /-furans,4,18
+TEQ,"TCDD-equivalents (Sum WHO-TEQ, lw)",Polychlorinated Dibenzodioxins /-furans,4,19
+BDE28,BDE-28,Brominated Flame Retardants,5,1
+BDE47,BDE-47,Brominated Flame Retardants,5,2
+BDE99,BDE-99,Brominated Flame Retardants,5,3
+BDE100,BDE-100,Brominated Flame Retardants,5,4
+BDE153,BDE-153,Brominated Flame Retardants,5,5
+BDE154,BDE-154,Brominated Flame Retardants,5,6
+SUMPBDE,SUM PBDE,Brominated Flame Retardants,5,7
+HBCD,HBCDD,Brominated Flame Retardants,5,8
+PFHXA,PFHxA,Perfluoroalkyl Substances,6,1
+PFHPA,PFHpA,Perfluoroalkyl Substances,6,2
+PFOA,PFOA,Perfluoroalkyl Substances,6,3
+PFNA,PFNA,Perfluoroalkyl Substances,6,4
+PFDA,PFDA,Perfluoroalkyl Substances,6,5
+PFUNDA,PFUnDA,Perfluoroalkyl Substances,6,6
+PFDODA,PFDoDA,Perfluoroalkyl Substances,6,7
+PFTRDA,PFTrDA,Perfluoroalkyl Substances,6,8
+PFTEDA,PFTeDA,Perfluoroalkyl Substances,6,9
+PFPEDA,PFPeDA,Perfluoroalkyl Substances,6,10
+LPFBS,lin-PFBS,Perfluoroalkyl Substances,6,11
+PFBS,PFBS,Perfluoroalkyl Substances,6,12
+LPFHXS,lin-PFHxS,Perfluoroalkyl Substances,6,13
+BPFHXS,br-PFHxS,Perfluoroalkyl Substances,6,14
+PFHXS,PFHxS,Perfluoroalkyl Substances,6,15
+LPFOS,lin-PFOS,Perfluoroalkyl Substances,6,16
+BPFOS,br-PFOS,Perfluoroalkyl Substances,6,17
+PFOS,PFOS,Perfluoroalkyl Substances,6,18
+LPFDS,lin-PFDS,Perfluoroalkyl Substances,6,19
+BPFDS,br-PFDS,Perfluoroalkyl Substances,6,20
+PFDS,PFDS,Perfluoroalkyl Substances,6,21
+LFOSA,lin-FOSA,Perfluoroalkyl Substances,6,22
+BFOSA,br-FOSA,Perfluoroalkyl Substances,6,23
+FOSA,FOSA,Perfluoroalkyl Substances,6,24
+PFAS24,PFOA-equivalents (Sum PFAS-24),Perfluoroalkyl Substances,6,25
+SUMPAH,Sum PAHs,Polycyclic Aromatic Hydrocarbons,7,1
+NAP,Naphtalene,Polycyclic Aromatic Hydrocarbons,7,2
+ACNE,Acenapthene,Polycyclic Aromatic Hydrocarbons,7,3
+FLE,Flourene,Polycyclic Aromatic Hydrocarbons,7,4
+PA,Phenantrene,Polycyclic Aromatic Hydrocarbons,7,5
+ANT,Anthracene,Polycyclic Aromatic Hydrocarbons,7,6
+FLU,Flouranthene,Polycyclic Aromatic Hydrocarbons,7,7
+PYR,Pyrene,Polycyclic Aromatic Hydrocarbons,7,8
+BAA,Benso (a) anthracene,Polycyclic Aromatic Hydrocarbons,7,9
+CHR,Chrysene,Polycyclic Aromatic Hydrocarbons,7,10
+BBF,Benso (b) fluoranthene,Polycyclic Aromatic Hydrocarbons,7,11
+BKF,Benso (k) fluoranthene,Polycyclic Aromatic Hydrocarbons,7,12
+BAP,Benso (a) pyrene,Polycyclic Aromatic Hydrocarbons,7,13
+BGHIP,"Benso (g, h, i) perylene",Polycyclic Aromatic Hydrocarbons,7,14
+DBAHA,"Dibenso (a , h) anthracene",Polycyclic Aromatic Hydrocarbons,7,15
+ICDP,"Indeno (1, 2, 3) pyrene",Polycyclic Aromatic Hydrocarbons,7,16

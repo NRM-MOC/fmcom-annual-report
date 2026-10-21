@@ -34,3 +34,16 @@ harsat:
     PCB_PCDDF: {fmcom: [PCBs, Dioxins and furans], harsat: [Chlorobiphenyls, Dioxins]}
     PAH:       {fmcom: [PAH], harsat: [PAH_parent]}
     BFR:       {fmcom: [BFRs], harsat: [Organobromines]}
+
+# Step 2c: tables and figures for the report
+tables_figures:
+  # One summary table per substance and group of species
+  table_groups:
+    herring: [Clupea harengus]
+    fish: [Perca fluviatilis, Gadus morhua, Zoarces viviparus]
+    mussel: [Mytilus edulis]
+    egg: [Uria aalge, Sterna hirundo, Haematopus ostralegus]
+  map_species: Clupea harengus   # species shown in the mean and trend maps
+  # Station order in tables: "coast" = Bothnian Bay down the east coast, then
+  # up the west coast; "latitude" = north to south
+  station_order: coast

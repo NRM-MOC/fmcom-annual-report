@@ -15,3 +15,10 @@ harsat:
     pes_sol:   {fmcom: [Pesticides and solvents], harsat: [Chlorinated pesticides]}
     PCB_PCDDF: {fmcom: [PCBs, Dioxins and furans], harsat: [Chlorobiphenyls, Dioxins]}
     BFR:       {fmcom: [BFRs], harsat: [Organobromines]}
+
+tables_figures:
+  table_groups:
+    perch: [Perca fluviatilis]
+    fish: [Salvelinus alpinus, Esox lucius]
+  map_species: Perca fluviatilis
+  station_order: latitude

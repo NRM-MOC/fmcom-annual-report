@@ -34,8 +34,7 @@ source(here::here("02_harsat", "prepare_harsat_input.R"))
 # A full HARSAT run takes several hours; to run only some groups:
 # harsat_groups <- c("PAH")
 source(here::here("02_harsat", "run_harsat.R"))
-
-# Not yet converted: 02_harsat/tables_figures.R
+source(here::here("02_harsat", "tables_figures.R"))
 
 ## Step 3: report (appendix PDF) ----
 # Not yet converted: 03_report/generate_appendix.R
