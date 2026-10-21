@@ -1,0 +1,22 @@
+# Fixes tried, in order, for time series whose HARSAT assessment does not
+# converge. Fixes listed under the series' diagnosis are tried first, then
+# the rest. Each attempt refits only that series; the first fix that
+# converges is kept. Results are written to convergence_log.csv.
+#
+# Diagnoses (from HARSAT's convergence check):
+#   fixed_bound     a fixed-effect (trend) coefficient is on its bound
+#   random_bound    a random-effect coefficient is on its upper bound
+#   standard_error  standard errors missing or implausibly small
+#   error           the model fit failed
+#
+# HARSAT defaults: fixed_bound = 5, random_bound = 3, hess.d = 0.001, hess.r = 6
+
+fixes:
+  - {fixed_bound: 10, for: [fixed_bound]}
+  - {fixed_bound: 20, for: [fixed_bound]}
+  - {fixed_bound: 30, for: [fixed_bound]}
+  - {random_bound: 5, for: [random_bound]}
+  - {hess.d: 0.0001, hess.r: 8, for: [standard_error]}
+  - {fixed_bound: 10, hess.d: 0.0001, hess.r: 8}
+  - {fixed_bound: 20, hess.d: 0.0001, hess.r: 8}
+  - {fixed_bound: 30, hess.d: 0.0001, hess.r: 8}

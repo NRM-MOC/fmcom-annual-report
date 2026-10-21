@@ -1,30 +1,30 @@
-country,station_code,station_name,station_latitude,station_longitude,region_Level1,regionLevel2,station_longname,station_type,waterbody_type
-Sweden,40G7,"Eastern Bornholm Basin, offshore",55.75000375,17.5000008,Sweden,Southern Baltic Proper,E Bornholm basin (offsh.),B,MC
-Sweden,46H0,"Northern Baltic Proper, offshore",58.74999834,20.5,Sweden,Northern Baltic Proper,N Baltic Proper (offsh.),B,MO
-Sweden,49G9,"Aland Sea, offshore",60.24999974,19.35001081,Sweden,Bothnian Sea,Sea of Aland (offsh.),B,MO
-Sweden,51G9,"Bothnian Sea, offshore",61.24999883,19.50000793,Sweden,Bothnian Sea,Bothnian Sea (offsh.),B,MO
-Sweden,ABBE,Abbekas,55.31625144,13.61104269,Sweden,Southern Baltic Proper,Abbekas,B,MC
-Sweden,ANGK,Angskarsklubb,60.53260784,18.16242733,Sweden,Bothnian Sea,Angskarsklubb,B,MC
-Sweden,ANGV,Angskarsklubb_S,60.53260784,18.16242733,Sweden,Bothnian Sea,Angskarsklubb,B,MC
-Sweden,BYXE,Byxelkrok,57.41210723,16.99495068,Sweden,Southern Baltic Proper,Byxelkrok,B,MC
-Sweden,FJBA,Fjallbacka,58.6330006,11.26145425,Sweden,West Coast,Fjallbacka,B,MC
-Sweden,FLAD,Fladen,57.19977803,11.81358114,Sweden,West Coast,Fladen,B,MO
-Sweden,GAFJ,Gaviksfjarden,63.12738583,18.63609392,Sweden,Bothnian Sea,Gaviksfjarden,B,MC
-Sweden,HABU,Western Hanobukten,55.75500909,14.28577862,Sweden,Southern Baltic Proper,W Hanobukten,B,MC
-Sweden,HAFJ,Harufjarden,65.58247415,22.87908991,Sweden,Bothnian Bay,Harufjarden,B,MC
-Sweden,HOLM,Holmoarna,63.68082842,20.87675806,Sweden,Bothnian Sea,Holmoarna,B,MC
-Sweden,KIFJ,Kinnbacksfjarden,64.84739308,21.2734287,Sweden,Bothnian Bay,Kinnbacksfjarden,B,MC
-Sweden,KULL,Kullen,56.32508942,12.3810633,Sweden,West Coast,Kullen,B,MC
-Sweden,KVFJ,Kvadofjarden,58.03364178,16.76496875,Sweden,Northern Baltic Proper,Kvadofjarden,B,MC
-Sweden,LAFJ,Langvindsfjarden,61.77382975,17.45523397,Sweden,Bothnian Sea,Langvindsfjarden,B,MC
-Sweden,LAGN,Lagno,59.43060901,18.62653049,Sweden,Northern Baltic Proper,Lagno,B,MC
-Sweden,LAND,Landsort,58.69363526,18.00425496,Sweden,Northern Baltic Proper,Landsort,B,MC
-Sweden,NIDI,Nidingen,57.38221878,11.89858851,Sweden,West Coast,Nidingen,B,MC
-Sweden,ORFJ,Orefjarden,63.42272278,19.39678791,Sweden,Bothnian Sea,Orefjarden,B,MC
-Sweden,RAFJ,Ranefjarden,65.7555473,22.418143,Sweden,Bothnian Bay,Ranefjarden,B,MC
-Sweden,SEGO,South Eastern Gotland,56.75024348,18.49609067,Sweden,Southern Baltic Proper,SE Gotland,B,MO
-Sweden,STKA,Stora Karlso,57.28209306,17.98576746,Sweden,Southern Baltic Proper,Stora Karlso,B,MC
-Sweden,TJRN,Tjarno,58.89277678,11.13527375,Sweden,West Coast,Tjarno,B,MC
-Sweden,UTLA,Utlangan,56.00807951,15.83090337,Sweden,Southern Baltic Proper,Utlangan,B,MC
-Sweden,UTLV,Utlangan_S,56.00807951,15.83090337,Sweden,Southern Baltic Proper,Utlangan (spring),B,MC
-Sweden,VADO,Vaderoarna,58.54930392,10.96441765,Sweden,West Coast,Vaderoarna,B,MC
+country,station_code,station_name,station_latitude,station_longitude,region_Level1,regionLevel2,station_longname,station_type,waterbody_type,station_code_SGU,season
+Sweden,40G7,"Eastern Bornholm Basin, offshore",55.75000375,17.5000008,Sweden,Southern Baltic Proper,E Bornholm basin (offsh.),B,MC,159259,
+Sweden,46H0,"Northern Baltic Proper, offshore",58.74999834,20.5,Sweden,Northern Baltic Proper,N Baltic Proper (offsh.),B,MO,159253,
+Sweden,49G9,"Aland Sea, offshore",60.24999974,19.35001081,Sweden,Bothnian Sea,Sea of Aland (offsh.),B,MO,159257,
+Sweden,51G9,"Bothnian Sea, offshore",61.24999883,19.50000793,Sweden,Bothnian Sea,Bothnian Sea (offsh.),B,MO,159252,
+Sweden,ABBE,Abbekas,55.31625144,13.61104269,Sweden,Southern Baltic Proper,Abbekas,B,MC,103640,
+Sweden,ANGK,Angskarsklubb,60.53260784,18.16242733,Sweden,Bothnian Sea,Angskarsklubb,B,MC,106619,
+Sweden,ANGV,Angskarsklubb_S,60.53260784,18.16242733,Sweden,Bothnian Sea,Angskarsklubb,B,MC,106619,Spring
+Sweden,BYXE,Byxelkrok,57.41210723,16.99495068,Sweden,Southern Baltic Proper,Byxelkrok,B,MC,103946,
+Sweden,FJBA,Fjallbacka,58.6330006,11.26145425,Sweden,West Coast,Fjallbacka,B,MC,104083,
+Sweden,FLAD,Fladen,57.19977803,11.81358114,Sweden,West Coast,Fladen,B,MO,104094,
+Sweden,GAFJ,Gaviksfjarden,63.12738583,18.63609392,Sweden,Bothnian Sea,Gaviksfjarden,B,MC,104178,
+Sweden,HABU,Western Hanobukten,55.75500909,14.28577862,Sweden,Southern Baltic Proper,W Hanobukten,B,MC,106486,
+Sweden,HAFJ,Harufjarden,65.58247415,22.87908991,Sweden,Bothnian Bay,Harufjarden,B,MC,104398,
+Sweden,HOLM,Holmoarna,63.68082842,20.87675806,Sweden,Bothnian Sea,Holmoarna,B,MC,104480,
+Sweden,KIFJ,Kinnbacksfjarden,64.84739308,21.2734287,Sweden,Bothnian Bay,Kinnbacksfjarden,B,MC,104691,
+Sweden,KULL,Kullen,56.32508942,12.3810633,Sweden,West Coast,Kullen,B,MC,104749,
+Sweden,KVFJ,Kvadofjarden,58.03364178,16.76496875,Sweden,Northern Baltic Proper,Kvadofjarden,B,MC,104770,
+Sweden,LAFJ,Langvindsfjarden,61.77382975,17.45523397,Sweden,Bothnian Sea,Langvindsfjarden,B,MC,105053,
+Sweden,LAGN,Lagno,59.43060901,18.62653049,Sweden,Northern Baltic Proper,Lagno,B,MC,104816,
+Sweden,LAND,Landsort,58.69363526,18.00425496,Sweden,Northern Baltic Proper,Landsort,B,MC,104823,
+Sweden,NIDI,Nidingen,57.38221878,11.89858851,Sweden,West Coast,Nidingen,B,MC,105249,
+Sweden,ORFJ,Orefjarden,63.42272278,19.39678791,Sweden,Bothnian Sea,Orefjarden,B,MC,106660,
+Sweden,RAFJ,Ranefjarden,65.7555473,22.418143,Sweden,Bothnian Bay,Ranefjarden,B,MC,105517,
+Sweden,SEGO,South Eastern Gotland,56.75024348,18.49609067,Sweden,Southern Baltic Proper,SE Gotland,B,MO,104214,
+Sweden,STKA,Stora Karlso,57.28209306,17.98576746,Sweden,Southern Baltic Proper,Stora Karlso,B,MC,105831,
+Sweden,TJRN,Tjarno,58.89277678,11.13527375,Sweden,West Coast,Tjarno,B,MC,106192,
+Sweden,UTLA,Utlangan,56.00807951,15.83090337,Sweden,Southern Baltic Proper,Utlangan,B,MC,106288,
+Sweden,UTLV,Utlangan_S,56.00807951,15.83090337,Sweden,Southern Baltic Proper,Utlangan (spring),B,MC,106288,Spring
+Sweden,VADO,Vaderoarna,58.54930392,10.96441765,Sweden,West Coast,Vaderoarna,B,MC,106422,

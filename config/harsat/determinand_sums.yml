@@ -1,0 +1,28 @@
+# Sums and weighted sums calculated by HARSAT (create_timeseries,
+# determinands.control). `det`: determinands summed; `weights`: weighted sum
+# (determinands are the names); `combine`: weighted sum of other sums' weights.
+
+# Linear + branched PFAS
+PFOS:  {det: [LPFOS, BPFOS]}
+FOSA:  {det: [LFOSA, BFOSA]}
+PFDS:  {det: [LPFDS, BPFDS]}
+PFHXS: {det: [LPFHXS, BPFHXS]}
+
+# TCDD equivalents (WHO TEFs)
+TEQDF:
+  weights: {TCDD: 1, PECDD: 1, HXCDD1: 0.1, HXCDD2: 0.1, HXCDD3: 0.1, HPCDD: 0.01,
+            OCDD: 0.0003, TCDF: 0.1, PECDF1: 0.03, PECDF2: 0.3, HXCDF1: 0.1,
+            HXCDF2: 0.1, HXCDF3: 0.1, HXCDF4: 0.1, HPCDF1: 0.01, HPCDF2: 0.01,
+            OCDF: 0.0003}
+TEQDLP:
+  weights: {CB77: 0.0001, CB81: 0.0003, CB126: 0.1, CB169: 0.03, CB105: 0.00003,
+            CB114: 0.00003, CB118: 0.00003, CB123: 0.00003, CB156: 0.00003,
+            CB157: 0.00003, CB167: 0.00003, CB189: 0.00003}
+TEQ: {combine: [TEQDLP, TEQDF]}
+
+# PFAS-24 (PFOA equivalents): the seven PFAS that make up >99% of the sum
+PFAS24:
+  weights: {PFOS: 2, PFOA: 1, PFNA: 10, PFDA: 7, PFUNDA: 4, PFDODA: 3, PFTRDA: 1.35}
+
+SUMPBDE: {det: [BDE47, BDE99, BDE100, BDE153, BDE154]}
+SUMPAH:  {det: [NAP, ACNE, FLE, PA, ANT, FLU, PYR, BAA, CHR, BBF, BKF, BAP, BGHIP, DBAHA, ICDP]}

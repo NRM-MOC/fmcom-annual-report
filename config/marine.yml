@@ -23,6 +23,14 @@ raw_data:
       negative_for_nondetect: false   # isotope values (d13C) are legitimately negative
 
 harsat:
-  # One HARSAT run per substance group, in this order
-  substance_groups: [metals, PFAS, pes_sol, PCB_PCDDF, PAH, BFR]
+  stations_file: stations_marine.csv   # in config/harsat/
   recent_trend: 10   # years used for the "recent trend"
+  # One HARSAT run per group, in this order. `fmcom`: substance groups in
+  # fmcom; `harsat`: HARSAT's determinand groups (for the summary table)
+  groups:
+    metals:    {fmcom: [Metals], harsat: [Metals]}
+    PFAS:      {fmcom: [PFAS], harsat: [Organofluorines]}
+    pes_sol:   {fmcom: [Pesticides and solvents], harsat: [Chlorinated pesticides]}
+    PCB_PCDDF: {fmcom: [PCBs, Dioxins and furans], harsat: [Chlorobiphenyls, Dioxins]}
+    PAH:       {fmcom: [PAH], harsat: [PAH_parent]}
+    BFR:       {fmcom: [BFRs], harsat: [Organobromines]}

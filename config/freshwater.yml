@@ -7,5 +7,11 @@ water_type: Freshwater   # value of fmcom$water_type for this programme
 year: 2025               # last year of data included in the report
 
 harsat:
-  substance_groups: [metals, PFAS, pes_sol, PCB_PCDDF, BFR]
+  stations_file: stations_freshwater.csv   # not yet created
   recent_trend: 10
+  groups:
+    metals:    {fmcom: [Metals], harsat: [Metals]}
+    PFAS:      {fmcom: [PFAS], harsat: [Organofluorines]}
+    pes_sol:   {fmcom: [Pesticides and solvents], harsat: [Chlorinated pesticides]}
+    PCB_PCDDF: {fmcom: [PCBs, Dioxins and furans], harsat: [Chlorobiphenyls, Dioxins]}
+    BFR:       {fmcom: [BFRs], harsat: [Organobromines]}
