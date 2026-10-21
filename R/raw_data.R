@@ -124,9 +124,12 @@ read_lab_files <- function(cfg) {
     # script does
     dplyr::filter(NRM_PARAMETERKOD != "TPRC")
 
+  # as.character()/as.integer() keep the columns when there is nothing to report
   list(data = data,
-       messages = tibble::tibble(lab_file = names(messages), message = unlist(messages)),
-       duplicates = tibble::tibble(lab_file = names(duplicates), n = unlist(duplicates)),
+       messages = tibble::tibble(lab_file = as.character(names(messages)),
+                                 message = as.character(unlist(messages))),
+       duplicates = tibble::tibble(lab_file = as.character(names(duplicates)),
+                                   n = as.integer(unlist(duplicates))),
        unlisted_files = setdiff(present, listed))
 }
 
