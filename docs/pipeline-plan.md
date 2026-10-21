@@ -105,7 +105,7 @@ Today both checkpoints are visual, human review. **Later:** make more of the ste
 - **Keep R Markdown** for the report, not Quarto (decided 2026-10-13). The appendix is generated from templates (`knit_expand`), and moving that to Quarto isn't worth the effort for now. The programme and year come from the config, and output paths are set once, not hard-coded in each `.Rmd` template.
 - **Substance groups are looped over**, listed in the config. Don't choose them by commenting lines in and out.
 - **fmcom replaces mcomDb** everywhere.
-- **Master tables from fmcom:** read contaminant and station tables from the fmcom GitHub repo (`data-raw/master_tables/`) at the same commit as the renv-pinned fmcom package, so they update along with the data and stay reproducible. When to switch: once we start importing raw lab files and have checked that the master tables cover every code needed (the current local `contaminant_SGU_NRM.csv` uses different codes). The HARSAT stations file stays a local config file, because HARSAT needs extra columns and the spring stations.
+- **Master tables from fmcom:** read contaminant and station tables from the fmcom GitHub repo (`data-raw/master_tables/`) at the same commit as the renv-pinned fmcom package, so they update along with the data and stay reproducible. Done in step 1 (2026-10-21). The old local `contaminant_SGU_NRM.csv` and `stations_SGU_marine.xlsx` have been removed. Until fmcom is installed from GitHub, the tables are read from fmcom's `master` branch, and the run record says so. The HARSAT stations file stays a local config file, because HARSAT needs extra columns and the spring stations.
 - **Isolate data access in one function** (e.g. `load_fmcom()`). The contaminant data is moving to Specify, so the data source will change later. Record which fmcom extract or version was used in each run's output.
 - When attaching the new year's data to fmcom, **flag it** (e.g. `source = "new_year"`) so QC outputs and plots can highlight it.
 - **QC as its own output**: step 1 (and ideally step 2) renders a QC report (e.g. `qc_report.html`) showing new values against the historical range per station/species/determinand, LOQ patterns, missing samples, and HARSAT anomalies. This should be usable for contacting labs without drafting the publication.
@@ -157,6 +157,33 @@ Today both checkpoints are visual, human review. **Later:** make more of the ste
   Compare the day as a number, because of a possible bug in fmcom where July 1–9 get no season (reported as an fmcom issue).
 - **Winter samples are excluded** from the analysis, because winter conditions affect contaminant concentrations. Winter samples are no longer collected, and the few old ones have already been removed from fmcom, so this should rarely happen. If any new-year sample does fall in winter, it's left out of the analysis but **listed in the QC output** (often it will be a wrong date), not dropped silently.
 - **MoCiS2:** the code list needs a plain "Ängskärsklubb" entry (like the existing plain "Utlängan"). `moc_read_lab()` also needs `na.rm = TRUE` in the fuzzy station check, so that an unknown station gives a warning instead of an error. The user is making these changes in NRM-MOC/MoCiS2.
+
+### Step 1: how the new year's data is built (implemented 2026-10-21)
+
+Step 1 mirrors fmcom's `data-raw/adding_next_year_fmcom.R`, which converts the SGU download into fmcom rows. Step 1 starts from the lab files read with MoCiS2 instead, i.e. the same data before it goes to SGU. That way the temporary new-year dataset looks the way the data will look in fmcom next year. Differences from the fmcom script are marked "Differs from fmcom" in `R/raw_data.R`.
+
+- **Lab files** are listed in `config/<programme>.yml`, because their names change every year. Step 1 warns about `.xlsm` files in the folder that aren't listed, and ignores Excel lock files (`~$`).
+- **Stations and contaminants** are joined to the fmcom master tables on SGU codes (`PROVPLATS_ID` = `station_code_SGU`, `UNIK_PARAMETERKOD` = `contaminant_code_SGU`), not on names. Extra spaces in the master tables are stripped on reading.
+- **CB-118U** (CB118 from the Umeå lab) is kept as CB118 with laboratory UMU, as fmcom has it. From 2025, CLC is no longer measured, so it's the only CB118 source, and HARSAT's TEQ sums need it.
+- **Isotopes** are included whenever an SI file is listed (read with `negative_for_nondetect: false`). The step 1 output is a temporary dataset, also used during the year, but it doesn't need to be complete.
+- **Censoring:** `LOQ_LOD` and `is_censored` come from MoCiS2's flags: `b` → `<LOD`, `q` → `<LOQ`, `q` + `Ja` → `>LOD, <LOQ`. This differs from fmcom, whose SGU download seems to lose `Ja` (reported as an fmcom issue). **Uncertainty** is MoCiS2's `MATOSAKERHET`, which is in the same unit as the value.
+- **Method rules** (`config/method_rules.csv`): egg content needs a different extraction method than the one the lab reports for all tissues. The rules are BFR `SLV_m064_f3` → `f4` and CLC `SLV_m063_f3` → `f2`. They match on the reported method, so fat % rows are never changed. In fmcom format both BFR methods map to `SFA_CLC_BFR`, so the rule matters mainly for the SGU submission.
+- **As in fmcom:**
+  - bismuth (`Bi`) is kept
+  - PFAS in muscle is removed (only liver is used)
+  - pooled samples get sex "Mixed"
+  - eggs get age 0
+  - fat % and dry weight % are attached per lab sample (`sample_ID`)
+  - the metals file's `TPRC` is dropped, as in the SGU submission script
+- **Samples without esbase data** (no date) get their year from the config and are listed in the QC output.
+- **Identical rows from a lab file** are removed and counted in the QC output. In 2025, the PFAS file listed FHXSA twice in its accreditation list, which made MoCiS2 repeat every FHXSA row.
+- **Checked against the old script** on the 2025 files: in the 5,221 rows both produced, every value and unit is identical. All other differences come from the decisions above.
+
+**Open follow-ups from the 2025 run:**
+- Biological data is missing for 2 Kinnbäcksfjärden herring pools (`B2026/...`).
+- Mussels and guillemot eggs have no catch dates in the esbase extract.
+- The Umeå instrument code changed (`GC-MS-MS-QQQ` in 2024, `GC-MS-MS` in 2025). It needs checking with the lab, and fmcom's method master table needs adjusting.
+- A possible MoCiS2 fix: `distinct()` in `read_lab_file_ackr()`.
 
 ### Later additions
 

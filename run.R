@@ -21,8 +21,7 @@ cfg <- load_config(programme)
 message("Running ", cfg$run_name, " (data through ", cfg$year, ")")
 
 ## Step 1: new year's raw data -> fmcom format + QC ----
-# Not yet converted to the new structure: 01_raw_data/prepare_new_year.R
-# still uses the old paths and settings.
+source(here::here("01_raw_data", "prepare_new_year.R"))
 
 ## ---- QC CHECKPOINT 1: new year's data ----
 # Review the QC output, contact labs if needed, and add any corrections to

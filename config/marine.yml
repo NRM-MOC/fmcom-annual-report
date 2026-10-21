@@ -6,6 +6,22 @@ programme: marine
 water_type: Marine   # value of fmcom$water_type for this programme
 year: 2025           # last year of data included in the report
 
+# Step 1: the new year's raw data. Paths are relative to the data folder
+# (FMCOM_DATA_DIR, default data/). Lab file names change every year, so list
+# the exact files (and versions) used for the report.
+raw_data:
+  lab_files_dir: marine/lab_files
+  esbase_file: esbase/Marina 2025 fiskar.xlsx
+  lab_files:
+    - file: Metals_Marin_260930.xlsm
+    - file: Hg_Marin_261001_version 2.xlsm
+    - file: MKL_Mall_Dioxins_Marin_2025.xlsm
+    - file: BFRs_Marin_261014TC.xlsm
+    - file: PFASs_Marin_2026_fin.xlsm
+    - file: PAHs_Marin_2025_IVL.xlsm
+    - file: SI_Marin_260930.xlsm
+      negative_for_nondetect: false   # isotope values (d13C) are legitimately negative
+
 harsat:
   # One HARSAT run per substance group, in this order
   substance_groups: [metals, PFAS, pes_sol, PCB_PCDDF, PAH, BFR]
