@@ -11,7 +11,7 @@ year: 2025           # last year of data included in the report
 # the exact files (and versions) used for the report.
 raw_data:
   lab_files_dir: marine/lab_files
-  esbase_file: esbase/Marina 2025 fiskar.xlsx
+  esbase_file: marine/esbase/Marina 2025 fiskar.xlsx
   lab_files:
     - file: Metals_Marin_260930.xlsm
     - file: Hg_Marin_261001_version 2.xlsm
