@@ -75,9 +75,9 @@ Open `run.R`, set `programme <- "marine"` (or `"freshwater"`), and run it sectio
 |---|---|---|---|
 | 1 New year's data + QC | ~20 s | ~20 s | `new_year_data.rds/.csv`, `qc_step1.csv` |
 | 2a HARSAT input | ~10 s | ~10 s | `harsat/data/` |
-| 2b HARSAT | **~3 h** | under 1 h (to be confirmed) | `harsat/assessments/`, `harsat/convergence_log.csv`, `harsat/oddities/` |
-| 2c Tables and figures | ~20 min | to be confirmed | `harsat/biota_summary.csv`, `harsat/figs/`, `harsat/tables/`, `harsat/contents_for_appendix.csv` |
-| 3 Report | ~2–6 min | to be confirmed | `report/appendix_<programme>_<year>.pdf` |
+| 2b HARSAT | **~3 h** | **~1.5 h** | `harsat/assessments/`, `harsat/convergence_log.csv`, `harsat/oddities/` |
+| 2c Tables and figures | ~20 min | ~15 min | `harsat/biota_summary.csv`, `harsat/figs/`, `harsat/tables/`, `harsat/contents_for_appendix.csv` |
+| 3 Report | ~2–6 min | ~1–2 min | `report/appendix_<programme>_<year>.pdf` |
 
 Each step also writes `run_info_step<n>.yml`: code version, fmcom and HARSAT versions, R version and the input files used.
 
