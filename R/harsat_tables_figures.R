@@ -23,7 +23,10 @@ station_display_names <- function(cfg, master_stations) {
 report_names <- function(cfg) {
   list(determinands = load_lookup("determinands"),
        species = load_lookup("species"),
-       stations = station_display_names(cfg, load_master_tables()$stations))
+       stations = station_display_names(cfg, load_master_tables()$stations),
+       # HARSAT's distribution per determinand (normal or lognormal)
+       distribution = utils::read.csv(here::here("config", "harsat", "determinand.csv"))[
+         , c("determinand", "distribution", "biota_unit")])
 }
 
 assessment_file <- function(cfg, group) {
@@ -37,12 +40,16 @@ write_harsat_summaries <- function(cfg, groups) {
   dir <- harsat_dir(cfg, "summaries")
   for (group in groups) {
     harsat_groups <- unlist(cfg$harsat$groups[[group]]$harsat)
+    assessment <- readRDS(assessment_file(cfg, group))
+    # HARSAT only calculates power for lognormal series (not e.g. the
+    # biological variables), and fails if asked for it when none has it
+    has_power <- any(vapply(assessment$assessment, function(x) !is.null(x$power), logical(1)))
     harsat::write_summary_table(
-      readRDS(assessment_file(cfg, group)),
+      assessment,
       output_file = paste0(group, ".csv"),
       output_dir = dir,
       determinandGroups = list(levels = harsat_groups, labels = harsat_groups),
-      extra_output = "power"
+      extra_output = if (has_power) "power" else NULL
     )
   }
   files <- file.path(dir, paste0(names(cfg$harsat$groups), ".csv"))
@@ -69,10 +76,15 @@ plot_timeseries <- function(cfg, groups, lookups) {
         station = display_name(obs$station_code, lookups$stations, "station_code", "station_display"),
         species = display_name(obs$species, lookups$species, "species", "name")
       )
+      # Biological variables: the name already includes the unit
+      group <- display_name(obs$determinand, lookups$determinands, "determinand", "report_group")
+      if (group %in% "Biological data") labels$y_axis <- labels$determinand
       code <- display_name(obs$species, lookups$species, "species", "code")
-      file <- paste0(paste(obs$station_code, code, obs$determinand, sep = "_"), ".pdf")
+      file <- paste0(paste(obs$station_code, code, file_code(obs$determinand), sep = "_"), ".pdf")
       plot <- ts_plot(a$assessment[[series]], obs, labels, report_year = cfg$year,
-                      min_years = cfg$tables_figures$plot_min_years)
+                      min_years = cfg$tables_figures$plot_min_years,
+                      distribution = display_name(obs$determinand, lookups$distribution,
+                                                  "determinand", "distribution"))
       ggplot2::ggsave(file.path(dir, file), plot, width = 6, height = 6, dpi = 300)
       files <- c(files, file)
     }
@@ -81,6 +93,10 @@ plot_timeseries <- function(cfg, groups, lookups) {
   # would overwrite each other
   unique(files[duplicated(files)])
 }
+
+# Determinand code as used in file names: "%" (DRYWT%, LIPIDWT%) starts a
+# comment in LaTeX, so it becomes "PRC"
+file_code <- function(determinand) gsub("%", "PRC", determinand, fixed = TRUE)
 
 # Name from a lookup table, or the code itself if it is not in the table
 display_name <- function(code, table, from, to) {
@@ -138,7 +154,7 @@ write_summary_tables <- function(cfg, rows) {
       dplyr::select(-station_code, -Latitude, -Longitude)
     for (det in unique(group_rows$Cont_short)) {
       utils::write.csv(dplyr::select(dplyr::filter(group_rows, Cont_short == det), -Cont_short),
-                       file.path(dir, paste0(det, "_", table_group, "_table.csv")),
+                       file.path(dir, paste0(file_code(det), "_", table_group, "_table.csv")),
                        row.names = FALSE)
     }
   }
@@ -147,7 +163,7 @@ write_summary_tables <- function(cfg, rows) {
 ## Mean and trend maps ----
 # For the map species: fitted mean in the last year (red outline above the
 # threshold) and the recent yearly change, as a map and a bar chart
-plot_maps <- function(cfg, rows) {
+plot_maps <- function(cfg, rows, lookups) {
   dir <- harsat_dir(cfg, "figs")
   world_map <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") |>
     sf::st_crop(c(xmin = 8, xmax = 25, ymin = 54, ymax = 70))
@@ -180,7 +196,7 @@ plot_maps <- function(cfg, rows) {
         mean_fill(mean_limits),
       bar_chart(sub_data, "mean_last_year", paste("fitted mean", cfg$year)) + mean_fill(mean_limits)
     )
-    ggplot2::ggsave(file.path(dir, paste0(cont$Cont_short[idx], "_mean_map.pdf")), mean_map,
+    ggplot2::ggsave(file.path(dir, paste0(file_code(cont$Cont_short[idx]), "_mean_map.pdf")), mean_map,
                     width = 8, height = 5)
 
     rate_map <- cowplot::plot_grid(
@@ -189,10 +205,24 @@ plot_maps <- function(cfg, rows) {
                             ggplot2::aes(x = Longitude, y = Latitude, fill = recent_change),
                             alpha = .8, size = 5, shape = 21, stroke = 1) +
         change_fill(change_limits),
-      bar_chart(sub_data, "recent_change", "yearly relative change, %") + change_fill(change_limits)
+      bar_chart(sub_data, "recent_change", change_label(cont$Cont_short[idx], lookups)) + change_fill(change_limits)
     )
-    ggplot2::ggsave(file.path(dir, paste0(cont$Cont_short[idx], "_rate_map.pdf")), rate_map,
+    ggplot2::ggsave(file.path(dir, paste0(file_code(cont$Cont_short[idx]), "_rate_map.pdf")), rate_map,
                     width = 8, height = 5)
+  }
+}
+
+# HARSAT gives trends in % per year for lognormal series (contaminants) and
+# in the variable's unit per year for normal series (biological variables)
+change_label <- function(determinand, lookups) {
+  i <- match(determinand, lookups$distribution$determinand)
+  if (identical(lookups$distribution$distribution[i], "normal")) {
+    unit <- lookups$distribution$biota_unit[i]
+    # A change in a % variable is in percentage points, not relative %
+    if (identical(unit, "%")) unit <- "percentage points"
+    paste0("yearly change, ", unit, " per year")
+  } else {
+    "yearly relative change, %"
   }
 }
 
@@ -240,7 +270,9 @@ appendix_contents <- function(summary, lookups) {
     dplyr::inner_join(lookups$determinands, by = "determinand") |>
     dplyr::mutate(species_order = match(gen, lookups$species$code)) |>
     dplyr::arrange(group_order, var_order, species_order) |>
-    dplyr::select(gen, var = determinand, var_name = name, group = report_group,
+    # `var` is used in figure and table file names (file_code)
+    dplyr::mutate(var = file_code(determinand)) |>
+    dplyr::select(gen, var, var_name = name, group = report_group,
                   group_order, var_order)
   list(contents = contents,
        missing = setdiff(assessed$determinand, lookups$determinands$determinand))

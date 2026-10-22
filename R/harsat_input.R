@@ -98,11 +98,40 @@ write_harsat_input <- function(cfg, data) {
                    file.path(dir, "stations.csv"), na = "", row.names = FALSE)
 
   rows <- vapply(names(cfg$harsat$groups), function(group) {
-    group_data <- dplyr::filter(data, substance_group %in% cfg$harsat$groups[[group]]$fmcom)
-    input <- to_harsat_format(group_data, stations)
+    settings <- cfg$harsat$groups[[group]]
+    input <- if (isTRUE(settings$biological)) {
+      harsat_bio_input(data, stations, cfg$harsat$biological)
+    } else {
+      to_harsat_format(dplyr::filter(data, substance_group %in% settings$fmcom), stations)
+    }
     utils::write.csv(input, file.path(dir, paste0("NRM_", group, ".csv")),
                      na = "", row.names = FALSE)
     nrow(input)
   }, integer(1))
   rows
+}
+
+## Input for the biological run ----
+# The biological variables are in every group's input (lipid and dry weight %
+# are needed there for basis conversion) but are assessed only in their own
+# run. Its input takes each variable from one source, so nothing is counted
+# twice (`rules`: config harsat: biological:).
+harsat_bio_input <- function(data, stations, rules) {
+  keep <- function(d, determinands) {
+    dplyr::filter(to_harsat_format(d, stations), determinand %in% determinands)
+  }
+  # Age, length and weight belong to the specimen, not the lab sample: one
+  # value per specimen, whichever lab samples it was in
+  per_specimen <- data |>
+    dplyr::mutate(sample_ID = specimen_ID) |>
+    dplyr::distinct(specimen_ID, organ, .keep_all = TRUE)
+  lipid <- dplyr::filter(data, laboratory %in% unlist(rules$lipid_laboratory),
+                         organ %in% unlist(rules$lipid_organs))
+  dry <- dplyr::filter(data, contaminant %in% unlist(rules$dry_weight_from))
+  dplyr::bind_rows(
+    keep(per_specimen, c("AGMEA", "LNMEA", "WTMEA")),
+    keep(lipid, "LIPIDWT%"),
+    keep(dry, "DRYWT%")
+  ) |>
+    dplyr::distinct()
 }

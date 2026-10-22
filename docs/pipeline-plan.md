@@ -193,6 +193,8 @@ Moved to the README ("Adding a new contaminant").
 
 ### Later additions
 
+- **Review how uncertainties are handled** (with the statistician): `tools/generic_uncertainty.R`, how fmcom stores `uncertainty` (from the national database), and how step 2a passes it to HARSAT (as %, without converting the labs' expanded U2 uncertainty to a standard deviation). Check that measured uncertainties and the `biota_sd_constant`/`biota_sd_variable` estimates in `config/harsat/determinand.csv` are on the same scale. The values for the biological variables (age, length, weight, dry weight %, lipid weight %) are first approximations (2026-10-22): dry weight % from the labs' reported 4% (U2), lipid weight % from the BFR lab's 25% (U2; the dioxin lab reports 100%, probably a placeholder), and measurement precision for age, length and weight.
+- **Rounding of trends for the biological variables (HARSAT):** HARSAT rounds `overall_change`, `recent_change` and `dtrend` to one decimal. That suits % per year for contaminants, but for the biological variables (`normal` distribution, trends in the variable's own unit per year) small changes in age or length show as 0.0. Possible change in HARSAT develop: more decimals, or significant figures, for `normal` series.
 - **Time trends for auxiliary biological data** (age, length, weight, fat %, etc.): add these to the report once everything else is in place. HARSAT couldn't previously run these statistics. The user has added support for them in the HARSAT develop version (1.0.6.1011).
 - **Biological data for birds and mussels:** this year the report only uses the biological (esbase) data for fish. Bird and mussel biological data aren't processed yet. They're included later, when data is reported to the national database.
 

@@ -1,4 +1,9 @@
 determinand,name,report_group,group_order,var_order
+AGMEA,"Age, years",Biological data,0,1
+LNMEA,"Total length, cm",Biological data,0,2
+WTMEA,"Total weight, g",Biological data,0,3
+LIPIDWT%,"Fat, %",Biological data,0,4
+DRYWT%,"Dry weight, %",Biological data,0,5
 AG,Ag,Metals,1,1
 AL,Al,Metals,1,2
 AS,As,Metals,1,3

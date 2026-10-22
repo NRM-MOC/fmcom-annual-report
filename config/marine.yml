@@ -34,6 +34,17 @@ harsat:
     PCB_PCDDF: {fmcom: [PCBs, Dioxins and furans], harsat: [Chlorobiphenyls, Dioxins]}
     PAH:       {fmcom: [PAH], harsat: [PAH_parent]}
     BFR:       {fmcom: [BFRs], harsat: [Organobromines]}
+    # Biological variables, assessed in their own run (see `biological` below)
+    bio:       {harsat: [Biological], biological: true}
+  # Which values go into the bio run. Age, length and weight: one value per
+  # specimen. Lipid weight %: only from the dioxin lab, whose method has not
+  # changed over time (the BFR lab changed in 2019/2020), in muscle and egg
+  # content. Dry weight %: only from the Hg lab samples (SLU until 2006, SU
+  # from 2007).
+  biological:
+    lipid_laboratory: UMU
+    lipid_organs: [Muscle, Egg content]
+    dry_weight_from: Hg   # contaminant whose lab samples give the dry weight %
 
 # Step 2c: tables and figures for the report
 tables_figures:

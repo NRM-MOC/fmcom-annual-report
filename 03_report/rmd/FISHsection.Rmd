@@ -15,7 +15,7 @@ if (file.exists(fish_table_path)){
   read_csv(fish_table_path) %>%
     #filter(((Species == "Perch") & (`Sampling site` %in% c("Kvädöfjärden", "Örefjärden", "Holmöarna")))| (Species != "Perch")) %>% 
     kable("latex", booktabs = TRUE, escape = FALSE, align = c(rep("l", 2), rep("r", 14)),
-          caption = paste("{{var_name}} in Cod, Eelpout and Perch.", tabcap)) %>%
+          caption = paste(tex("{{var_name}}"), "in Cod, Eelpout and Perch.", tab_caption("{{var}}"))) %>%
     add_header_above(c(" "=5, "Whole time period"=6, "Last 10 years"=2)) %>% 
     kable_styling(latex_options = c("scale_down", "hold_position"))
 } else

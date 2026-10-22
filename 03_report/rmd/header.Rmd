@@ -25,6 +25,23 @@ order_figs <- function(file_names){
   file_names[order(match(str_sub(file_names, 1, 4), getOption("appendix.station_order")))]
 }
 options(knitr.kable.NA = '')
+# Table captions are raw LaTeX: "%" (e.g. "Fat, %") must be escaped
+tex <- function(x) gsub("%", "\\%", x, fixed = TRUE)
+# Table caption: trends are in percent per year for contaminants (lognormal),
+# in the variable's unit per year for the biological variables (normal);
+# for variables measured in %, that is percentage points per year
+tab_caption <- function(var) {
+  if (var %in% getOption("appendix.normal_vars")) {
+    unit <- "the variable's unit per year; percentage points per year for fat and dry weight"
+    sub("in percent per year) in mean concentration between start and end",
+        paste0("in ", unit, ") in the mean between start and end"),
+        sub("in percent per year) in the mean concentration for the last 10 years",
+            paste0("in ", unit, ") in the mean for the last 10 years"),
+            tabcap, fixed = TRUE), fixed = TRUE)
+  } else {
+    tabcap
+  }
+}
 tabcap <- "Parameters: n year all: number of years in time series; n year fit: number years included in analysis; years: sampling time span; p nonlinear: significance of a nonlinear change in the log concentrations over the period; p linear: significance of a linear change in the log concentrations over the period; p overall: significance of a change in the log concentrations over the period; linear change: estimated change (in percent per year) in mean concentration between start and end of the time series; p linear change: the significance of the change; detectable change: the percentage annual increase in concentration that would be detected with 90$\\%$ power using a test at the 5$\\%$ significance level given 10 years of annual monitoring; recent change: estimated change (in percent per year) in the mean concentration for the last 10 years; p recent change: the significance of the recent change; mean last year: the fitted mean concentration in the last year; climit last year: the upper one-sided 95$\\%$ confidence limit on the fitted mean concentration in the last year; threshold: EQS, EAC or other applicable threshold."
 ```
 

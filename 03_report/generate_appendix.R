@@ -21,6 +21,9 @@ options(
   appendix.recent_trend = as.integer(cfg$harsat$recent_trend),
   appendix.station_order = report_station_order(cfg),
   appendix.thresholds = here::here(cfg$report$thresholds_file),
+  # Variables HARSAT models on the original scale (trends in unit per year)
+  appendix.normal_vars = file_code(with(report_names(cfg)$distribution,
+                                        determinand[distribution %in% "normal"])),
   appendix.thresholds_note = cfg$report$thresholds_note
 )
 

@@ -47,25 +47,31 @@ matrix_text <- c(MU = "muscle", LI = "liver", SB = "soft body", EH = "egg conten
 # are black; values below LOQ use `loq_colour`, as open circles if
 # `loq_open` is TRUE. The x-axis ends at `report_year`, so a series that has
 # stopped is visibly shorter, and covers at least `min_years` years.
+# `distribution`: HARSAT models lognormal series (contaminants) on the log
+# scale, normal series (biological variables) on the original scale.
 ts_plot <- function(assessment, obs, labels, report_year, min_years = 10,
+                    distribution = "lognormal",
                     loq_colour = "#0072B2", loq_open = TRUE){
+
+  # Annual means, trend and thresholds back on the scale of the data
+  back <- if (identical(distribution, "normal")) identity else exp
 
   obs_ind <- assessment$data |>
     # Column for values where condition is '<'
     dplyr::mutate(LOQ = as.numeric(ifelse(censoring == "<", concentration, NA)))
 
   obs_avg <- assessment$annualIndex |>
-    dplyr::mutate(obs_avg = exp(index),
+    dplyr::mutate(obs_avg = back(index),
                   LOQ = as.numeric(ifelse(censoring == "<", obs_avg, NA)))
 
   if ("pred" %in% names(assessment)){
     pred <- assessment$pred |>
-      dplyr::mutate(pred_conc = exp(fit), upper = exp(ci.upper), lower = exp(ci.lower))
+      dplyr::mutate(pred_conc = back(fit), upper = back(ci.upper), lower = back(ci.lower))
   }
 
   if ('reference.values' %in% names(assessment)){
     EQS <- assessment$reference.values |>
-      dplyr::mutate(threshold = exp(refvalue))
+      dplyr::mutate(threshold = back(refvalue))
     EQS_e <- EQS$threshold[1]
   }
 
@@ -75,7 +81,7 @@ ts_plot <- function(assessment, obs, labels, report_year, min_years = 10,
   # y-axis text and title
   basis <- dplyr::coalesce(lookup(obs$basis, basis_text), obs$basis)
   matrix <- dplyr::coalesce(lookup(obs$matrix, matrix_text), obs$matrix)
-  y_axis <- paste(labels$determinand, obs$unit, basis, matrix)
+  y_axis <- labels$y_axis %||% paste(labels$determinand, obs$unit, basis, matrix)
   title <- paste(labels$station, labels$species, sep = ' - ')
 
   ggplot2::ggplot() +

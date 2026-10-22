@@ -17,6 +17,17 @@ harsat_sums <- function() {
   })
 }
 
+## Determinands assessed in a run ----
+# Only those in the run's HARSAT groups (config harsat: groups:). The other
+# determinands in the input, e.g. lipid weight % for basis conversion, are
+# used but not assessed; the biological variables are assessed in their own
+# run.
+harsat_run_determinands <- function(cfg, group) {
+  info <- utils::read.csv(here::here("config", "harsat", "determinand.csv"))
+  harsat_groups <- unlist(cfg$harsat$groups[[group]]$harsat)
+  info$determinand[info$biota_assess %in% TRUE & info$biota_group %in% harsat_groups]
+}
+
 ## Run one group ----
 # Saves the assessment before and after convergence fixes, and returns the
 # convergence log.
@@ -37,6 +48,7 @@ run_harsat_group <- function(cfg, group) {
 
   timeseries <- harsat::create_timeseries(
     data,
+    determinands = harsat_run_determinands(cfg, group),
     get_basis = get_basis_nrm,
     determinands.control = harsat_sums()
   )

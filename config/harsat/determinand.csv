@@ -1,9 +1,9 @@
 determinand,common_name,pargroup,biota_group,sediment_group,water_group,biota_assess,sediment_assess,water_assess,biota_unit,sediment_unit,water_unit,biota_auxiliary,sediment_auxiliary,water_auxiliary,biota_sd_constant,biota_sd_variable,sediment_sd_constant,sediment_sd_variable,water_sd_constant,water_sd_variable,distribution,good_status
-AGMEA,biota age,B-BIO,Auxiliary,Auxiliary,Auxiliary,FALSE,FALSE,FALSE,y,y,y,,,,,,,,,,normal,
-LNMEA,mean length,B-BIO,Auxiliary,Auxiliary,Auxiliary,FALSE,FALSE,FALSE,cm,cm,cm,,,,,,,,,,normal,
-WTMEA,mean weight,B-BIO,Auxiliary,Auxiliary,Auxiliary,FALSE,FALSE,FALSE,g,g,g,,,,,,,,,,normal,
-DRYWT%,dry weight,B-BIO,Auxiliary,Auxiliary,Auxiliary,FALSE,FALSE,FALSE,%,%,%,,,,,,,,,,normal,
-LIPIDWT%,lipid weight,B-BIO,Auxiliary,Auxiliary,Auxiliary,FALSE,FALSE,FALSE,%,%,%,,,,,,,,,,normal,
+AGMEA,biota age,B-BIO,Biological,Auxiliary,Auxiliary,TRUE,FALSE,FALSE,y,y,y,,,,0.5,0,,,,,normal,low
+LNMEA,mean length,B-BIO,Biological,Auxiliary,Auxiliary,TRUE,FALSE,FALSE,cm,cm,cm,,,,0.05,0.01,,,,,normal,low
+WTMEA,mean weight,B-BIO,Biological,Auxiliary,Auxiliary,TRUE,FALSE,FALSE,g,g,g,,,,0.01,0.02,,,,,normal,low
+DRYWT%,dry weight,B-BIO,Biological,Auxiliary,Auxiliary,TRUE,FALSE,FALSE,%,%,%,,,,0.1,0.02,,,,,normal,low
+LIPIDWT%,lipid weight,B-BIO,Biological,Auxiliary,Auxiliary,TRUE,FALSE,FALSE,%,%,%,,,,0.1,0.125,,,,,normal,low
 FULTON,fulton condition factor,B-BIO,Auxiliary,Auxiliary,Auxiliary,FALSE,FALSE,FALSE,%,%,%,,,,,,,,,,normal,
 AG,Silver,I-MET,Metals,Metals,Metals,TRUE,FALSE,FALSE,mg/kg,,,LNMEA~AGMEA~WTMEA,,,0.00203,0.15908,,,,,lognormal,low
 AL,Aluminium,I-MET,Metals,Auxiliary,Metals,TRUE,FALSE,FALSE,mg/kg,,,LNMEA~AGMEA~WTMEA,,,0.60148,0.40004,,,,,lognormal,low
