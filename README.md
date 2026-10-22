@@ -4,7 +4,7 @@ Reproducible pipeline for the annual reports on temporal trends and spatial vari
 
 Working on the report is also how the new year's data is quality-checked before it is submitted to the [National Contaminants database](https://www.sgu.se/produkter-och-tjanster/datavardskapen-grundvatten-och-miljogifter/rapporterad-data-till-datavardskap-for-miljogifter/) hosted at the Geological Survey of Sweden (SGU). The database is only available in Swedish.
 
-> **Status:** marine runs end to end. Freshwater still needs its own config, HARSAT stations file, report text and report sections (see [Marine and freshwater](#marine-and-freshwater)).
+> **Status:** marine and freshwater both run end to end. Marine was validated against the scripts used for the 2025 report; freshwater has been tested with the 2024 data.
 
 ## How it works
 
@@ -23,7 +23,7 @@ lab files + esbase ──► Step 1 ──► new year's data in fmcom format + 
 **The yearly cycle.** This pipeline adds the new year *temporarily* to fmcom, from the lab files. The QC'd data is submitted to the National Contaminants database through a separate pipeline, and is added into fmcom the following year.
 
 **QC checkpoints.**
-1. After step 1: review `qc_step1.csv`, contact labs if needed, fix and re-run step 1.
+1. After step 1: review `qc_step1.csv`, contact labs if needed, fix and re-run step 1. Among other things, it checks that every lab specimen has biological data in esbase, and that each lab station matches one esbase location (which catches wrong specimen IDs in a lab file).
 2. After step 3: look through the report for oddities; if data must be corrected, re-run all steps from step 1.
 
 ## Folders
@@ -71,19 +71,35 @@ The run for the report is done from a local clone of this repository at the Swed
 
 Open `run.R`, set `programme <- "marine"` (or `"freshwater"`), and run it section by section, stopping at the QC checkpoints.
 
-| Step | Run time (marine 2025) | Main output in `output/<programme>_<year>/` |
-|---|---|---|
-| 1 New year's data + QC | ~20 s | `new_year_data.rds/.csv`, `qc_step1.csv` |
-| 2a HARSAT input | ~10 s | `harsat/data/` |
-| 2b HARSAT | **~3 h** | `harsat/assessments/`, `harsat/convergence_log.csv`, `harsat/oddities/` |
-| 2c Tables and figures | ~20 min | `harsat/biota_summary.csv`, `harsat/figs/`, `harsat/tables/`, `harsat/contents_for_appendix.csv` |
-| 3 Report | ~2–6 min | `report/appendix_<programme>_<year>.pdf` |
+| Step | Run time, marine 2025 | Run time, freshwater 2024 | Main output in `output/<programme>_<year>/` |
+|---|---|---|---|
+| 1 New year's data + QC | ~20 s | ~20 s | `new_year_data.rds/.csv`, `qc_step1.csv` |
+| 2a HARSAT input | ~10 s | ~10 s | `harsat/data/` |
+| 2b HARSAT | **~3 h** | under 1 h (to be confirmed) | `harsat/assessments/`, `harsat/convergence_log.csv`, `harsat/oddities/` |
+| 2c Tables and figures | ~20 min | to be confirmed | `harsat/biota_summary.csv`, `harsat/figs/`, `harsat/tables/`, `harsat/contents_for_appendix.csv` |
+| 3 Report | ~2–6 min | to be confirmed | `report/appendix_<programme>_<year>.pdf` |
 
 Each step also writes `run_info_step<n>.yml`: code version, fmcom and HARSAT versions, R version and the input files used.
 
 To run HARSAT (2b) and the tables and figures (2c) for some groups only, set e.g. `harsat_groups <- c("PAH")` before those steps.
 
 **Convergence.** Time series whose HARSAT model doesn't converge are diagnosed and refitted automatically with the fixes in `config/harsat/convergence_fixes.yml`. `harsat/convergence_log.csv` lists every series, what was tried and the fix that worked (or "unresolved"). Series fixed with the smaller hess step are worth a visual check.
+
+## Biological variables
+
+Age, total length, weight, fat % and dry weight % are assessed in their own HARSAT run (`bio` in `harsat: groups:`), separately from the contaminants. Each variable comes from one source, so nothing is counted twice (`harsat: biological:` in the config):
+
+- age, length and weight: one value per specimen
+- fat %: only from the dioxin lab (UMU), whose method has not changed over time
+- dry weight %: only from the samples analysed for mercury
+
+Weight is modelled as log-normal, like the contaminants (its spread grows in proportion to the mean), so its trends are in percent per year. The other variables are modelled as normal, so their trends are in units per year (percentage points for fat % and dry weight %). HARSAT currently rounds the changes in its summary to one decimal, so small trends in normal series (e.g. fat %) are shown as 0.
+
+## The esbase extract
+
+The biological data (date, sex, age, length, weight) comes from esbase. Set the file in `raw_data: esbase_file:`.
+
+The column names have sometimes differed between extracts, so the pipeline looks for each field under the names seen so far (`esbase_columns` in `R/raw_data.R`), and translates Swedish species names to Latin. If a new extract uses a name that isn't known, step 1 stops and says which column is missing; add the new name in the config under `raw_data: esbase_columns:`.
 
 ## Each new year
 
@@ -131,8 +147,21 @@ Both programmes use the same code and the same HARSAT information files; `progra
 
 | | Marine | Freshwater |
 |---|---|---|
-| Settings | `config/marine.yml` | `config/freshwater.yml` (placeholder) |
-| HARSAT stations | `config/harsat/stations_marine.csv` | `stations_freshwater.csv` (to create) |
-| Threshold table | `config/report/thresholds_marine.csv` | to create |
-| Year-specific text | `03_report/text/marine.Rmd` | to create |
-| Report sections | herring, fish, mussel, egg | perch, fish (the section logic in `R/report_helpers.R` still has the marine species groups built in) |
+| Settings | `config/marine.yml` | `config/freshwater.yml` |
+| HARSAT stations | `config/harsat/stations_marine.csv` | `config/harsat/stations_freshwater.csv` |
+| Threshold table | `config/report/thresholds_marine.csv` | `config/report/thresholds_freshwater.csv` (no mussels) |
+| Year-specific text | `03_report/text/marine.Rmd` | `03_report/text/freshwater.Rmd` |
+| Report sections (`report: sections:`) | herring, fish, mussel, egg | perch; pike and Arctic char |
+| Winter samples (`raw_data: exclude_winter:`) | excluded | kept |
+| Species not assessed (`harsat: exclude_species:`) | none | roach |
+| Station order in tables (`tables_figures: station_order:`) | along the coast | north to south |
+
+Each part of a substance's section in the report is a template in `03_report/rmd/` with the species codes it shows, set in `report: sections:`.
+
+## Data
+
+The lab files and the esbase data are not public, so step 1 can only be run at the Swedish Museum of Natural History. The historical data is public in [fmcom](https://github.com/NRM-MOC/fmcom).
+
+## Licence
+
+Code and documentation: [CC BY 4.0](LICENSE.md), the same licence as fmcom.
