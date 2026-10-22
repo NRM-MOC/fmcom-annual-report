@@ -26,7 +26,7 @@ if (length(duplicate_files) > 0) {
 
 rows <- summary_table_rows(summary, lookups, cfg$tables_figures$station_order)
 write_summary_tables(cfg, rows)
-plot_maps(cfg, rows)
+plot_maps(cfg, rows, lookups)
 
 contents <- appendix_contents(summary, lookups)
 readr::write_csv(contents$contents, file.path(harsat_dir(cfg), "contents_for_appendix.csv"))
