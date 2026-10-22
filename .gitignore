@@ -55,6 +55,3 @@ oddities/
 
 # renv package library
 renv/library/
-
-# other
-temp_info/
