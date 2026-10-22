@@ -135,14 +135,14 @@ plot_maps <- function(cfg, rows) {
   dir <- harsat_dir(cfg, "figs")
   world_map <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") |>
     sf::st_crop(c(xmin = 8, xmax = 25, ymin = 54, ymax = 70))
-  # Spring stations share coordinates with the autumn ones; shift them
-  # slightly east so both circles are visible
+  # Spring series are left out of the map panel: they share coordinates with
+  # the autumn series and would overlap them and nearby stations. They are
+  # kept in the bar chart.
   stations <- load_harsat_stations(cfg)
   spring <- stations$station_code[stations$season %in% "Spring"]
   mf <- rows |>
     dplyr::filter(Species == cfg$tables_figures$map_species) |>
-    dplyr::mutate(Longitude = Longitude + ifelse(station_code %in% spring, 0.5, 0)) |>
-    dplyr::select(Cont_short, Station, Longitude, Latitude, threshold,
+    dplyr::select(Cont_short, station_code, Station, Longitude, Latitude, threshold,
                   recent_change = `recent change`, mean_last_year = `mean last year`)
   cont <- dplyr::distinct(mf, Cont_short, threshold)
 
@@ -150,27 +150,30 @@ plot_maps <- function(cfg, rows) {
     sub_data <- dplyr::filter(mf, Cont_short == cont$Cont_short[idx])
     threshold <- cont$threshold[idx]
     sub_data$above <- ifelse(sub_data$mean_last_year < threshold | is.na(threshold), "black", "red")
+    map_data <- dplyr::filter(sub_data, !station_code %in% spring)
+    # Same colour range in both panels, from all stations
+    mean_limits <- value_range(sub_data$mean_last_year)
+    change_limits <- value_range(sub_data$recent_change)
 
     mean_map <- cowplot::plot_grid(
       base_map(world_map) +
-        ggplot2::geom_point(data = sub_data,
+        ggplot2::geom_point(data = map_data,
                             ggplot2::aes(x = Longitude, y = Latitude, fill = mean_last_year, color = above),
                             alpha = .8, size = 5, shape = 21, stroke = 1) +
         ggplot2::scale_color_manual(values = c("red" = "red", "black" = "black")) +
-        ggplot2::scale_fill_continuous(high = "#132B43", low = "#56B1F7"),
-      bar_chart(sub_data, "mean_last_year", paste("fitted mean", cfg$year)) +
-        ggplot2::scale_fill_continuous(high = "#132B43", low = "#56B1F7")
+        mean_fill(mean_limits),
+      bar_chart(sub_data, "mean_last_year", paste("fitted mean", cfg$year)) + mean_fill(mean_limits)
     )
     ggplot2::ggsave(file.path(dir, paste0(cont$Cont_short[idx], "_mean_map.pdf")), mean_map,
                     width = 8, height = 5)
 
     rate_map <- cowplot::plot_grid(
       base_map(world_map) +
-        ggplot2::geom_point(data = sub_data,
+        ggplot2::geom_point(data = map_data,
                             ggplot2::aes(x = Longitude, y = Latitude, fill = recent_change),
                             alpha = .8, size = 5, shape = 21, stroke = 1) +
-        change_fill(),
-      bar_chart(sub_data, "recent_change", "yearly relative change, %") + change_fill()
+        change_fill(change_limits),
+      bar_chart(sub_data, "recent_change", "yearly relative change, %") + change_fill(change_limits)
     )
     ggplot2::ggsave(file.path(dir, paste0(cont$Cont_short[idx], "_rate_map.pdf")), rate_map,
                     width = 8, height = 5)
@@ -198,9 +201,16 @@ bar_chart <- function(data, column, y_label) {
     ggplot2::theme(legend.position = "none", axis.text.x = ggplot2::element_text(angle = 45))
 }
 
-change_fill <- function() {
+# Range of the values, or NULL (the scale's default) if there are none
+value_range <- function(x) if (any(!is.na(x))) range(x, na.rm = TRUE) else NULL
+
+mean_fill <- function(limits) {
+  ggplot2::scale_fill_continuous(high = "#132B43", low = "#56B1F7", limits = limits)
+}
+
+change_fill <- function(limits) {
   ggplot2::scale_fill_gradient2(high = scales::muted("red"), mid = "white",
-                                low = scales::muted("blue"))
+                                low = scales::muted("blue"), limits = limits)
 }
 
 ## Contents of the appendix ----

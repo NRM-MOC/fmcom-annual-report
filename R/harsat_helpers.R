@@ -43,8 +43,10 @@ basis_text <- c(W = "ww", D = "dw", L = "lw")
 matrix_text <- c(MU = "muscle", LI = "liver", SB = "soft body", EH = "egg content")
 
 # Time series plot for one assessed series. `labels` gives the display names:
-# determinand, station and species (from the lookup tables).
-ts_plot <- function(assessment, obs, labels){
+# determinand, station and species (from the lookup tables). Values above LOQ
+# are black; values below LOQ use `loq_colour`, as open circles if
+# `loq_open` is TRUE.
+ts_plot <- function(assessment, obs, labels, loq_colour = "#0072B2", loq_open = TRUE){
 
   obs_ind <- assessment$data |>
     # Column for values where condition is '<'
@@ -65,6 +67,8 @@ ts_plot <- function(assessment, obs, labels){
     EQS_e <- EQS$threshold[1]
   }
 
+  loq_shape <- if (loq_open) 21 else 19   # 21: open circle with white fill
+
   # y-axis text and title
   basis <- dplyr::coalesce(lookup(obs$basis, basis_text), obs$basis)
   matrix <- dplyr::coalesce(lookup(obs$matrix, matrix_text), obs$matrix)
@@ -82,19 +86,25 @@ ts_plot <- function(assessment, obs, labels){
         )
       }
     } +
-    ggplot2::geom_point(data = obs_ind, ggplot2::aes(x = year, y = concentration), size = 0.75, color = 'black') +
-    ggplot2::geom_point(data = obs_ind, ggplot2::aes(x = year, y = LOQ), size = 1, color = '#FF6600') +
-    ggplot2::geom_point(data = obs_avg, ggplot2::aes(x = year, y = obs_avg), size = 2, color = 'black') +
-    ggplot2::geom_point(data = obs_avg, ggplot2::aes(x = year, y = LOQ), size = 2, color = '#FF6600') +
-    # Fitted trend and confidence band, if a model was fitted
+    # Fitted trend and confidence band, if a model was fitted; drawn before the
+    # points so the band does not grey the points inside it
     {
       if (!is.null(assessment$pred)){
         list(
-          ggplot2::geom_line(data = pred, ggplot2::aes(x = year, y = pred_conc), alpha = .1, linetype = 'solid', color = 'black'),
-          ggplot2::geom_ribbon(data = pred, ggplot2::aes(x = year, ymax = upper, ymin = lower), fill = "black", alpha = 0.25)
+          ggplot2::geom_ribbon(data = pred, ggplot2::aes(x = year, ymax = upper, ymin = lower), fill = "black", alpha = 0.25),
+          ggplot2::geom_line(data = pred, ggplot2::aes(x = year, y = pred_conc), alpha = .1, linetype = 'solid', color = 'black')
         )
       }
     } +
+    # Black for values above LOQ only, so no black point shows behind a <LOQ one
+    ggplot2::geom_point(data = dplyr::filter(obs_ind, is.na(LOQ)), ggplot2::aes(x = year, y = concentration),
+                        size = 0.75, color = 'black') +
+    ggplot2::geom_point(data = obs_ind, ggplot2::aes(x = year, y = LOQ), size = 1,
+                        color = loq_colour, shape = loq_shape, fill = "white") +
+    ggplot2::geom_point(data = dplyr::filter(obs_avg, is.na(LOQ)), ggplot2::aes(x = year, y = obs_avg),
+                        size = 2, color = 'black') +
+    ggplot2::geom_point(data = obs_avg, ggplot2::aes(x = year, y = LOQ), size = 2,
+                        color = loq_colour, shape = loq_shape, fill = "white") +
     ggplot2::ylab(y_axis) +
     ggplot2::ggtitle(title) +
     ggplot2::theme_classic() +
