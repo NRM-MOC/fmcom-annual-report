@@ -28,9 +28,25 @@ qc_step1 <- function(cfg, lab, bio, new_year, master) {
   # reported as a count per species
   analysed_species <- unique(stats::na.omit(new_year$species))
   lab_specimens <- unpool_ids(unique(d$PROV_KOD_ORIGINAL))
-  esbase_only <- read_esbase_raw(cfg) |>
+  esbase <- read_esbase_raw(cfg)
+  esbase_only <- esbase |>
     dplyr::filter(SPECIES %in% analysed_species, !ACCNR %in% lab_specimens) |>
     dplyr::count(SPECIES)
+
+  # Each lab station should match one esbase location and the other way
+  # round; otherwise a specimen ID in a lab file is probably wrong
+  station_location <- lab_individuals(d, station = TRUE) |>
+    dplyr::inner_join(dplyr::select(esbase, ACCNR, LOCATION), by = c("individual" = "ACCNR")) |>
+    dplyr::filter(!is.na(LOCATION)) |>
+    dplyr::mutate(LOCATION = as.character(LOCATION))
+  location_mismatch <- station_location |>
+    dplyr::filter(dplyr::n_distinct(LOCATION) > 1, .by = station) |>
+    dplyr::bind_rows(dplyr::filter(station_location, dplyr::n_distinct(station) > 1,
+                                   .by = LOCATION)) |>
+    dplyr::distinct() |>
+    dplyr::count(station, LOCATION, sample, name = "individuals") |>
+    dplyr::mutate(text = paste0(station, " ", sample, ": ", individuals,
+                                " from esbase location ", LOCATION))
 
   dplyr::bind_rows(
     qc_item("Lab files in the folder but not listed in the config", lab$unlisted_files),
@@ -70,6 +86,8 @@ qc_step1 <- function(cfg, lab, bio, new_year, master) {
              individuals$in_esbase & is.na(individuals$KON)),
     qc_item("Esbase specimens of analysed species without lab data (count per species)",
             paste0(esbase_only$SPECIES, ": ", esbase_only$n, recycle0 = TRUE)),
+    qc_item("Lab stations and esbase locations that do not match one to one (wrong specimen ID?)",
+            location_mismatch$text),
     qc_item(paste0("Winter samples (", if (isTRUE(cfg$raw_data$exclude_winter)) "excluded from" else "kept in",
                    " the new-year data)"),
             paste(winter$species, winter$specimen_ID)),
@@ -87,11 +105,16 @@ qc_item <- function(check, items) {
 
 # One row per lab sample and individual specimen in it (pooled samples
 # expanded). An individual analysed both alone and in a pool appears twice.
-lab_individuals <- function(d) {
-  samples <- dplyr::distinct(d, sample = PROV_KOD_ORIGINAL, species = LATIN)
+# `station = TRUE` adds the lab file's station (name and SGU ID).
+lab_individuals <- function(d, station = FALSE) {
+  samples <- if (station) {
+    dplyr::distinct(d, sample = PROV_KOD_ORIGINAL, species = LATIN,
+                    station = paste0(PROVPLATS_ANALYSMALL, " (", PROVPLATS_ID, ")"))
+  } else {
+    dplyr::distinct(d, sample = PROV_KOD_ORIGINAL, species = LATIN)
+  }
   purrr::map(seq_len(nrow(samples)), function(i) {
-    tibble::tibble(sample = samples$sample[i], species = samples$species[i],
-                   individual = unpool_ids(samples$sample[i]))
+    tibble::tibble(samples[i, ], individual = unpool_ids(samples$sample[i]))
   }) |>
     dplyr::bind_rows()
 }

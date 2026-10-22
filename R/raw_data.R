@@ -166,9 +166,22 @@ esbase_columns <- list(
   TOTL = c("TOTL", "totallength"),
   ALDR = c("ALDR", "age_start"),
   MUSSEL_LENGTH = c("Mussellängd"),
-  EGG_LENGTH = c("ägglängd")
+  EGG_LENGTH = c("ägglängd"),
+  # esbase's location (ID or name), only used in QC
+  LOCATION = c("LOCID_ESBASE", "locality", "Lokal")
 )
-esbase_optional <- c("MUSSEL_LENGTH", "EGG_LENGTH")
+esbase_optional <- c("MUSSEL_LENGTH", "EGG_LENGTH", "LOCATION")
+
+# Some extracts give Swedish species names (or genus only); the pipeline uses
+# the Latin names in the lab files. Names not listed are kept as they are.
+esbase_species <- c(
+  "Abborre" = "Perca fluviatilis", "Gädda" = "Esox lucius", "Mört" = "Rutilus rutilus",
+  "Röding" = "Salvelinus alpinus", "Salvelinus" = "Salvelinus alpinus",
+  "Strömming" = "Clupea harengus", "Sill" = "Clupea harengus", "Torsk" = "Gadus morhua",
+  "Tånglake" = "Zoarces viviparus", "Blåmussla" = "Mytilus edulis",
+  "Sillgrissla" = "Uria aalge", "Fisktärna" = "Sterna hirundo",
+  "Strandskata" = "Haematopus ostralegus"
+)
 
 # The extract (Excel or semicolon-separated CSV) with standard column names
 read_esbase_raw <- function(cfg) {
@@ -195,6 +208,7 @@ read_esbase_raw <- function(cfg) {
     }
     out[[field]] <- raw[[found]]
   }
+  out$SPECIES <- dplyr::coalesce(unname(esbase_species[out$SPECIES]), out$SPECIES)
   out
 }
 

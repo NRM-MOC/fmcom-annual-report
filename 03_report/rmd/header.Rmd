@@ -93,7 +93,8 @@ if (!is.null(table_path) && file.exists(table_path)){
       slice(-1) %>%   # drop the units row now that it's folded into the header
       kable("latex", booktabs = TRUE, escape = FALSE,
             col.names = header,
-            align = c("l", "l", "r", "r", "l"),   # Group, Substances, Fish, Mussels, Target
+            # Group, Substances, one column per matrix (Fish, Mussels, ...), Target
+            align = c("l", "l", rep("r", ncol(raw) - 3), "l"),
             caption = "Target values") %>%
       kable_styling(latex_options = c("hold_position"))
     note <- getOption("appendix.thresholds_note")

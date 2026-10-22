@@ -1,0 +1,40 @@
+<!--
+UPDATE THIS FILE EVERY YEAR. Programme- and year-specific text for the
+freshwater report, inserted after the citation. Check each year:
+  - Picture front page: who took the photo
+  - Acknowledgements: labs, project leaders and chemists for each analysis
+  - Introduction: references to the latest report and articles
+  - Method updates: changes since the last published report
+The title, authors and citation are in config/freshwater.yml (report:); the
+shared text (statistics, thresholds, how to read figures and tables) is in
+03_report/rmd/header.Rmd.
+-->
+
+##### Picture front page
+TODO
+
+### Acknowledgements for chemical analysis
+
+##### Chlorinated pesticides, polychlorinated biphenyls and brominated flame retardants
+TODO
+
+##### Per and polyflouroalkyl substances (PFAS)
+TODO
+
+##### Trace metals
+TODO
+
+##### Stable isotopes
+TODO
+
+##### PCDD/F and dl-PCBs
+TODO
+
+
+
+# Introduction
+This report present a graphic and statistical overview of temporal trends and spatial variations within the Swedish National Monitoring Programme for Contaminants in Freshwater Biota.
+
+
+### Method updates since the last published report
+TODO

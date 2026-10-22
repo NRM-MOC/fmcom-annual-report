@@ -1,25 +1,85 @@
 # Settings for the freshwater programme (Swedish National Monitoring
-# Programme for Contaminants in Freshwater Biota). Placeholder until
-# freshwater is moved into the shared pipeline; see freshwater_baseline/.
+# Programme for Contaminants in Freshwater Biota). Update `year` each new
+# report; other values change only when the method changes.
 
 programme: freshwater
 water_type: Freshwater   # value of fmcom$water_type for this programme
-year: 2025               # last year of data included in the report
+year: 2024               # last year of data included in the report
+
+# Step 1: the new year's raw data. Paths are relative to the data folder
+# (FMCOM_DATA_DIR, default data/). Lab file names change every year, so list
+# the exact files (and versions) used for the report.
+raw_data:
+  # Freshwater fish are sampled in autumn; no winter samples to remove
+  exclude_winter: false
+  lab_files_dir: freshwater/lab_files
+  esbase_file: freshwater/esbase/Biologdata_fcom24_uppdaterade_aldrar.xlsx
+  lab_files:
+    - file: Metals_Limnic_2024_251126.xlsm
+    - file: Hg_Limnic_2024_251126.xlsm
+    - file: Dioxins_Limnic_2024_NRM.xlsm
+    - file: BFRs_Limnic_2024_SLV20251217.xlsm
+    - file: PFASs_Limnic_2024_added_comp_rev_FBSA_checked.xlsm
+    - file: SI_Limnic_2024_260805.xlsm
+      negative_for_nondetect: false   # isotope values (d13C) are legitimately negative
 
 harsat:
-  stations_file: stations_freshwater.csv   # not yet created
-  recent_trend: 10
+  stations_file: stations_freshwater.csv   # in config/harsat/
+  recent_trend: 10   # years used for the "recent trend"
+  # Species in the data that are not assessed in this programme
+  exclude_species: [Rutilus rutilus]
+  # One HARSAT run per group, in this order. `fmcom`: substance groups in
+  # fmcom; `harsat`: HARSAT's determinand groups (for the summary table)
   groups:
     metals:    {fmcom: [Metals], harsat: [Metals]}
     PFAS:      {fmcom: [PFAS], harsat: [Organofluorines]}
     pes_sol:   {fmcom: [Pesticides and solvents], harsat: [Chlorinated pesticides]}
     PCB_PCDDF: {fmcom: [PCBs, Dioxins and furans], harsat: [Chlorobiphenyls, Dioxins]}
     BFR:       {fmcom: [BFRs], harsat: [Organobromines]}
+    # Biological variables, assessed in their own run (see `biological` below)
+    bio:       {harsat: [Biological], biological: true}
+  # Which values go into the bio run (same rules as marine). Age, length and
+  # weight: one value per specimen. Lipid weight %: only from the dioxin lab.
+  # Dry weight %: only from the Hg lab samples.
+  biological:
+    lipid_laboratory: UMU
+    lipid_organs: [Muscle]
+    dry_weight_from: Hg   # contaminant whose lab samples give the dry weight %
 
+# Step 2c: tables and figures for the report
 tables_figures:
+  # One summary table per substance and group of species
   table_groups:
     perch: [Perca fluviatilis]
     fish: [Salvelinus alpinus, Esox lucius]
-  map_species: Perca fluviatilis
+  map_species: Perca fluviatilis   # species shown in the mean and trend maps
+  # Time series plots: x-axis ends at the report year and covers at least
+  # this many years
   plot_min_years: 10
+  # Station order in tables: "coast" = Bothnian Bay down the east coast, then
+  # up the west coast; "latitude" = north to south
   station_order: latitude
+
+# Step 3: the report appendix. Year-specific text (acknowledgements,
+# introduction, method updates) is in `text_file`; edit it each year.
+report:
+  title: "Graphic and statistical overview of temporal trends and spatial variations in the Swedish National Monitoring Programme for Contaminants in Freshwater Biota (including data through {year})"
+  authors:
+    - "Suzanne Faxneld, Conny Jonsson, Anders Forsberg, Nellie Stjärnkvist"
+    - "and Anne L. Soerensen"
+  # "Please cite as: <authors> (<year>). <title>, <publisher>."
+  citation:
+    authors: "Faxneld, S., J. C. Jonsson, A. Forsberg, N. Stjärnkvist, A.L. Soerensen"
+    year: 2026   # publication year
+    publisher: "Swedish Museum of Natural History, Stockholm, Sweden"
+  biota: freshwater      # wording in the shared text ("... in freshwater biota")
+  text_file: 03_report/text/freshwater.Rmd
+  thresholds_file: config/report/thresholds_freshwater.csv
+  thresholds_note: "Sum(PBDE) in the report is the sum of five congeners (BDE-47, -99, -100, -153, -154) as BDE-28 has not been analyzed most years; the contribution of BDE-28 to the sum is typically small."
+  # Parts of each substance's section, in this order: template in
+  # 03_report/rmd/ and the species codes (config/lookups/species.csv) it shows
+  sections:
+    - {template: PERCsection.Rmd, species: [PERC]}
+    - {template: FISHsection_freshwater.Rmd, species: [SALV, ESOX]}
+  # No maps for these substances (no data, or mostly below LOQ)
+  exclude_maps: [AHCH, BHCH, LINDAN, CB28, PFHXA, PFHPA, LPFBS, LPFHXS, BPFHXS, PFHXS, LPFDS, BPFDS, PFDS]
