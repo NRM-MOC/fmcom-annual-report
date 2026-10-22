@@ -1,0 +1,24 @@
+Group,Substances,Fish ,Mussels ,Target
+,,(ug/kg ww),(ug/kg dw),
+Metals,Cadmium,160,,QS$_{\text{biota sec pois}}$
+Metals,Lead,200,1000,QS$_{\text{biota hh}}$
+Metals,Mercury,20,,EQS$_{\text{biota}}$ (QS$_{\text{biota sec pois}}$)
+PAHs,Fluoranthene,,110,EAC
+PAHs,Anthracene,,290,EAC
+PAHs,Napthalene,,340,EAC
+PAHs,Phenantrene,,1700,EAC
+PAHs,Pyrene,,100,EAC
+PAHs,Benzo(a)anthracene,,80,EAC
+PAHs,Benzo(a)pyrene,,600,EAC
+PAHs,Benzo(ghi)pyrelene,,110,EAC
+Pesticides,"DDE (p,p´)",5,,EAC
+Pesticides,Sum(HCH) (incl. lindane),2.6,,IVL
+Pesticides,HCB,10,,EQS$_{\text{biota}}$ (QS$_{\text{biota hh food}}$)
+PCBs,PCB 118,24 lw,,EAC
+PCBs,PCB 153,1600 lw,,EAC
+PCBs and dioxins,Sum(PCDD+PCDF+dl-PCB),0.0065,,food regulation
+Dioxins,Sum(PCDD+PCDF) ,0.0035,,food regulation
+BFRs,Sum(PBDE),0.0085,,EQS$_{\text{biota}}$ (QS$_{\text{biota hh food}}$)
+BFRs,HBCDD,167,,EQS$_{\text{biota}}$ (QS$_{\text{biota sec pois}}$)
+PFAS,PFOS,9.1,,EQS$_{\text{biota}}$ (QS$_{\text{biota hh food}}$)
+PFAS,Sum(PFAS$_{\text{25}}$),0.077,,EQS$_{\text{biota}}$ (QS$_{\text{biota hh food}}$)

@@ -37,7 +37,8 @@ source(here::here("02_harsat", "run_harsat.R"))
 source(here::here("02_harsat", "tables_figures.R"))
 
 ## Step 3: report (appendix PDF) ----
-# Not yet converted: 03_report/generate_appendix.R
+# Edit the year-specific text first (config: report: text_file)
+source(here::here("03_report", "generate_appendix.R"))
 
 ## ---- QC CHECKPOINT 2: the finished report ----
 # Look through the report for oddities (trends, outliers, missing series).

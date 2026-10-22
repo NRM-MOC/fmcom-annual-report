@@ -45,8 +45,10 @@ matrix_text <- c(MU = "muscle", LI = "liver", SB = "soft body", EH = "egg conten
 # Time series plot for one assessed series. `labels` gives the display names:
 # determinand, station and species (from the lookup tables). Values above LOQ
 # are black; values below LOQ use `loq_colour`, as open circles if
-# `loq_open` is TRUE.
-ts_plot <- function(assessment, obs, labels, loq_colour = "#0072B2", loq_open = TRUE){
+# `loq_open` is TRUE. The x-axis ends at `report_year`, so a series that has
+# stopped is visibly shorter, and covers at least `min_years` years.
+ts_plot <- function(assessment, obs, labels, report_year, min_years = 10,
+                    loq_colour = "#0072B2", loq_open = TRUE){
 
   obs_ind <- assessment$data |>
     # Column for values where condition is '<'
@@ -68,6 +70,7 @@ ts_plot <- function(assessment, obs, labels, loq_colour = "#0072B2", loq_open = 
   }
 
   loq_shape <- if (loq_open) 21 else 19   # 21: open circle with white fill
+  x_range <- c(min(obs_ind$year, report_year - min_years + 1, na.rm = TRUE), report_year)
 
   # y-axis text and title
   basis <- dplyr::coalesce(lookup(obs$basis, basis_text), obs$basis)
@@ -111,8 +114,23 @@ ts_plot <- function(assessment, obs, labels, loq_colour = "#0072B2", loq_open = 
     ggplot2::theme(text = ggplot2::element_text(size = 15),
                    axis.text.x = ggplot2::element_text(color = "black"),
                    axis.text.y = ggplot2::element_text(color = "black")) +
+    # Whole years only on the x-axis, always including the report year
+    ggplot2::scale_x_continuous(breaks = function(limits) year_breaks(limits, report_year)) +
     # y-axis from 0 to 1.5 x the highest annual mean. coord_cartesian() crops
     # the view; scale limits would drop the parts of the confidence band (and
     # any points) above the axis, leaving gaps in the band
-    ggplot2::coord_cartesian(ylim = c(0, max(obs_avg$obs_avg*1.5, na.rm = TRUE)))
+    ggplot2::coord_cartesian(xlim = x_range,
+                             ylim = c(0, max(obs_avg$obs_avg*1.5, na.rm = TRUE)))
+}
+
+# Whole-year axis breaks that always include the report year. A break one
+# year from it, or closer than half the break spacing, is dropped so the
+# labels don't crowd (the axis covers at least 10 years).
+year_breaks <- function(limits, report_year) {
+  breaks <- pretty(limits)
+  breaks <- breaks[breaks == round(breaks)]
+  step <- if (length(breaks) > 1) min(diff(breaks)) else 1
+  distance <- abs(breaks - report_year)
+  breaks <- breaks[!(distance <= 1 | distance < step / 2) | breaks == report_year]
+  sort(unique(c(breaks, report_year)))
 }

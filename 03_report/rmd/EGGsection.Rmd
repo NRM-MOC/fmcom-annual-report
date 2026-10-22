@@ -1,18 +1,25 @@
 
 ### Egg
 
+```{r, echo = FALSE}
+# Base path for HARSAT output (figures & tables). Set from generate_appendix.R via
+# options(appendix.base_path = ...).
+base_path <- getOption("appendix.base_path")
+```
+
 #### Summary statistics
 
 ```{r, results = "asis", echo = FALSE}
-if (file.exists("../MCOM25_HARSAT/output/MCoM_2025_10L/tables/{{var}}_egg_table.csv")){
-  read_csv("../MCOM25_HARSAT/output/MCoM_2025_10L/tables/{{var}}_egg_table.csv") %>%
+egg_table_path <- file.path(base_path, "tables", "{{var}}_egg_table.csv")
+if (file.exists(egg_table_path)){
+  read_csv(egg_table_path) %>%
     kable("latex", booktabs = TRUE, escape = FALSE, align = c(rep("l", 2), rep("r", 14)),
           caption = paste("{{var_name}} in Eggs.", tabcap)) %>%
     add_header_above(c(" "=5, "Whole time period"=6, "Last 10 years"=2)) %>% 
     kable_styling(latex_options = c("scale_down", "hold_position"))
 } else
 {
-  print(paste("../MCOM25_HARSAT/output/MCoM_2025_10L/tables/{{var}}_egg_table.csv", "is missing"))
+  print(paste(egg_table_path, "is missing"))
   
 }
 ```
@@ -21,16 +28,17 @@ if (file.exists("../MCOM25_HARSAT/output/MCoM_2025_10L/tables/{{var}}_egg_table.
 #### Station time-series
 
 ```{r, fig.width = 4, out.width = "0.33\\textwidth", fig.asp= 1.3, echo = FALSE}
-plot_files_SIGR <- dir("../MCOM25_HARSAT/output/MCoM_2025_10L/figs/") %>% 
+figs_dir <- file.path(base_path, "figs")
+plot_files_SIGR <- dir(figs_dir) %>% 
   subset(., str_detect(., "SIGR_{{var}}.pdf")) %>% 
   order_figs()
-plot_files_HAEM <- dir("../MCOM25_HARSAT/output/MCoM_2025_10L/figs/") %>% 
+plot_files_HAEM <- dir(figs_dir) %>% 
   subset(., str_detect(., "HAEM_{{var}}.pdf")) %>% 
   order_figs()
-plot_files_STER <- dir("../MCOM25_HARSAT/output/MCoM_2025_10L/figs/") %>% 
+plot_files_STER <- dir(figs_dir) %>% 
   subset(., str_detect(., "STER_{{var}}.pdf")) %>% 
   order_figs()
-plot_files <- paste0("../MCOM25_HARSAT/output/MCoM_2025_10L/figs/", c(plot_files_SIGR, plot_files_HAEM, plot_files_STER)) %>% 
+plot_files <- file.path(figs_dir, c(plot_files_SIGR, plot_files_HAEM, plot_files_STER)) %>% 
   subset(., file.exists(.))
 knitr::include_graphics(plot_files)
 ```

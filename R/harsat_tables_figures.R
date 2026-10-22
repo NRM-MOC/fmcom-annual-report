@@ -71,8 +71,9 @@ plot_timeseries <- function(cfg, groups, lookups) {
       )
       code <- display_name(obs$species, lookups$species, "species", "code")
       file <- paste0(paste(obs$station_code, code, obs$determinand, sep = "_"), ".pdf")
-      ggplot2::ggsave(file.path(dir, file), ts_plot(a$assessment[[series]], obs, labels),
-                      width = 6, height = 6, dpi = 300)
+      plot <- ts_plot(a$assessment[[series]], obs, labels, report_year = cfg$year,
+                      min_years = cfg$tables_figures$plot_min_years)
+      ggplot2::ggsave(file.path(dir, file), plot, width = 6, height = 6, dpi = 300)
       files <- c(files, file)
     }
   }
@@ -105,13 +106,28 @@ summary_table_rows <- function(summary, lookups, station_order) {
                   "recent change" = recent_change, "p recent change" = p_recent_change,
                   "mean last year" = mean_last_year, "climit last year" = climit_last_year,
                   threshold = EQS_value)
-  order_value <- switch(station_order,
-    # East coast north to south, then the west coast south to north
-    coast = -(-1)^(rows$Longitude > 13.6) * rows$Latitude,
-    latitude = rows$Latitude)
+  order_value <- station_order_value(rows$Latitude, rows$Longitude, station_order)
   rows |>
     dplyr::mutate(Station = forcats::fct_reorder(Station, order_value)) |>
     dplyr::arrange(dplyr::desc(Station))
+}
+
+# Sorts stations in report order, highest value first (station_order in the
+# config). "coast": east coast north to south, then the west coast south to
+# north; "latitude": north to south.
+station_order_value <- function(latitude, longitude, station_order) {
+  switch(station_order,
+    coast = -(-1)^(longitude > 13.6) * latitude,
+    latitude = latitude)
+}
+
+# HARSAT station codes in report order, as in the tables (used to order the
+# time series plots in the report)
+report_station_order <- function(cfg) {
+  s <- load_harsat_stations(cfg)
+  value <- station_order_value(s$station_latitude, s$station_longitude,
+                               cfg$tables_figures$station_order)
+  s$station_code[order(-value, s$station_code)]
 }
 
 write_summary_tables <- function(cfg, rows) {

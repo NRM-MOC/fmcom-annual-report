@@ -21,4 +21,5 @@ tables_figures:
     perch: [Perca fluviatilis]
     fish: [Salvelinus alpinus, Esox lucius]
   map_species: Perca fluviatilis
+  plot_min_years: 10
   station_order: latitude

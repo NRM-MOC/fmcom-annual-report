@@ -24,5 +24,8 @@ TEQ: {combine: [TEQDLP, TEQDF]}
 PFAS24:
   weights: {PFOS: 2, PFOA: 1, PFNA: 10, PFDA: 7, PFUNDA: 4, PFDODA: 3, PFTRDA: 1.35}
 
+# BDE-28 is not included: it has not been analysed most years, and HARSAT
+# drops a sum when any of its determinands is missing, which would remove
+# the whole time series
 SUMPBDE: {det: [BDE47, BDE99, BDE100, BDE153, BDE154]}
 SUMPAH:  {det: [NAP, ACNE, FLE, PA, ANT, FLU, PYR, BAA, CHR, BBF, BKF, BAP, BGHIP, DBAHA, ICDP]}

@@ -1,0 +1,48 @@
+<!--
+UPDATE THIS FILE EVERY YEAR. Programme- and year-specific text for the
+marine report, inserted after the citation. Check each year:
+  - Picture front page: who took the photo
+  - Acknowledgements: labs, project leaders and chemists for each analysis
+  - Introduction: references to the latest report and articles
+  - Method updates: changes since the last published report
+The title, authors and citation are in config/marine.yml (report:); the
+shared text (statistics, thresholds, how to read figures and tables) is in
+03_report/rmd/header.Rmd.
+-->
+
+##### Picture front page
+Ludvig Palmheden
+
+### Acknowledgements for chemical analysis
+
+##### Chlorinated pesticides, polychlorinated biphenyls and brominated flame retardants
+Swedish Food Agency:
+Tatiana Cantillana (project leader), Linda Amdahl (chemist)
+
+##### Per and polyflouroalkyl substances (PFAS)
+Swedish University of Agricultural Sciences (SLU):
+Lutz Ahrens (project leader), Marija Lukaric (research engineer)
+
+##### Trace metals
+Stockholm University:
+Sofi Jonsson (project leader), Pär Hjelmquist and Frida Edberg (chemist)
+
+##### Stable isotopes
+Stockholm University:
+Sofi Jonsson (project leader), Pär Hjelmquist (chemist)
+
+##### PCDD/F and dl-PCBs
+Umeå University: Peter Haglund (project leader and chemist)
+
+##### Polycyclic aromatic hydrocarbons (PAHs)
+IVL Swedish Environmental Research Institute:
+Ann Sjöblom (project leader and chemist)
+
+
+
+# Introduction
+This report present a graphic and statistical overview of temporal trends and spatial variations within the Swedish National Monitoring Programme for Contaminants in Marine Biota. For a more in depth presentation of the monitoring program (sampling area, collected specimen and contaminants included in the program, sampling and analytical methods) and a discussion of results we refer to the report @Soerensen2025marine and article @Ammar2024.
+
+
+### Method updates since the publication of @Soerensen2025marine
+The sum for PFAS-24 (PFOA-equivalents) is preliminary introduced in the report. It is calculated based on the seven PFAS most important to the total sum (PFOS, PFOA, PFNA, PFDA, PFUnDA, PFDoDA, PFTrDA) accounting for >99% of the total PFOA-equivalent sum. A muscle to liver conversion factor of 13.3, based on 219 fish with paired muscle and liver samples, is used to convert the proposed PFAS-24 EQS from a muscle to liver value.

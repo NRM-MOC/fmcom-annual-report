@@ -44,6 +44,28 @@ tables_figures:
     mussel: [Mytilus edulis]
     egg: [Uria aalge, Sterna hirundo, Haematopus ostralegus]
   map_species: Clupea harengus   # species shown in the mean and trend maps
+  # Time series plots: x-axis ends at the report year and covers at least
+  # this many years
+  plot_min_years: 10
   # Station order in tables: "coast" = Bothnian Bay down the east coast, then
   # up the west coast; "latitude" = north to south
   station_order: coast
+
+# Step 3: the report appendix. Year-specific text (citation, acknowledgements,
+# introduction, method updates) is in `text_file`; edit it each year.
+report:
+  title: "Graphic and statistical overview of temporal trends and spatial variations in the Swedish National Monitoring Programme for Contaminants in Marine Biota (including data through {year})"
+  authors:
+    - "Anne L. Soerensen, Conny Jonsson, Anders Forsberg, Nellie Stjärnkvist,"
+    - "and Suzanne Faxneld"
+  # "Please cite as: <authors> (<year>). <title>, <publisher>."
+  citation:
+    authors: "Soerensen, A.L., J. C. Jonsson, A. Forsberg, N. Stjärnkvist, S. Faxneld"
+    year: 2026   # publication year
+    publisher: "Swedish Museum of Natural History, Stockholm, Sweden"
+  biota: marine          # wording in the shared text ("... in marine biota")
+  text_file: 03_report/text/marine.Rmd
+  thresholds_file: config/report/thresholds_marine.csv
+  thresholds_note: "Sum(PBDE) in the report is the sum of five congeners (BDE-47, -99, -100, -153, -154) as BDE-28 has not been analyzed most years; the contribution of BDE-28 to the sum is typically small."
+  # No maps for these substances (no data, or mostly below LOQ)
+  exclude_maps: [CR, AHCH, LINDAN, PFHXA, PFHPA, LPFBS, LPFDS, PFDS]
