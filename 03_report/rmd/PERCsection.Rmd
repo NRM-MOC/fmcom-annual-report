@@ -1,0 +1,72 @@
+
+### Perch
+
+
+```{r, eval={{maps}}, results='asis'}
+cat("#### Spatial distribution
+    ")
+```
+
+
+```{r, echo = FALSE}
+# Base path for HARSAT output (figures & tables). Set from generate_appendix.R via
+# options(appendix.base_path = ...).
+base_path <- getOption("appendix.base_path")
+
+conc <- ifelse("{{var}}" %in% c("AGMEA", "LNMEA", "WTMEA", "LIPIDWTPRC", "DRYWTPRC"), "", "concentration of")
+```
+
+
+```{r, echo = FALSE, fig.cap=paste0("Fitted mean for ", conc, " {{var_name}}, ", report_year, "."), eval={{maps}}}
+mean_map_path <- file.path(base_path, "figs", "{{var}}_mean_map.pdf")
+if (file.exists(mean_map_path)){
+  knitr::include_graphics(mean_map_path)
+} else
+{
+  print(paste(mean_map_path, "is missing"))
+}
+```
+
+
+```{r, echo = FALSE, fig.cap=paste0("Fitted trend for ", conc, " {{var_name}}, ", trend_years, "."), eval={{maps}}}
+rate_map_path <- file.path(base_path, "figs", "{{var}}_rate_map.pdf")
+if (file.exists(rate_map_path)){
+  knitr::include_graphics(rate_map_path)
+} 
+# else
+# {
+#   print(paste(rate_map_path, "is missing"))
+# }
+```
+
+
+#### Summary statistics
+
+```{r, results = "asis", echo = FALSE}
+perch_table_path <- file.path(base_path, "tables", "{{var}}_perch_table.csv")
+if (file.exists(perch_table_path)){
+  read_csv(perch_table_path) %>%
+    kable("latex", booktabs = TRUE, escape = FALSE, align = c(rep("l", 2), rep("r", 14)),
+          caption = paste(tex("{{var_name}}"), "in perch.", tab_caption("{{var}}"))) %>%
+    add_header_above(c(" "=5, "Whole time period"=6, "Last 10 years"=2)) %>% 
+    kable_styling(latex_options = c("scale_down", "hold_position"))
+} else
+{
+  print(paste(perch_table_path, "is missing"))
+  
+}
+```
+
+
+#### Station time-series
+
+```{r, fig.width = 4, out.width = "0.33\\textwidth", fig.asp= 1.3, echo = FALSE}
+figs_dir <- file.path(base_path, "figs")
+plot_files <- dir(figs_dir) %>% 
+  subset(., str_detect(., "PERC_{{var}}.pdf")) %>% 
+  order_figs() %>% 
+  file.path(figs_dir, .) %>% 
+  subset(., file.exists(.))
+knitr::include_graphics(plot_files)
+```
+

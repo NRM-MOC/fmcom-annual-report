@@ -152,19 +152,59 @@ read_method_rules <- function() {
 }
 
 ## Biological data (esbase) ----
+# The esbase extract's column names change from year to year. Each field
+# below lists the names seen so far; the first one present is used. Names
+# can be added in the config (raw_data: esbase_columns:) without changing
+# code. Mussel and egg lengths (mm) are only present when mussel and bird
+# data is in the extract.
+esbase_columns <- list(
+  ACCNR = c("ACCNR_ESBASE", "ACCNR", "accnr"),
+  DATE = c("DATE", "death_date_start", "discovery_date_start"),
+  SPECIES = c("SPECIES", "species", "lat_name"),
+  SEX = c("SEX", "gender"),
+  TOTV = c("TOTV", "weight"),
+  TOTL = c("TOTL", "totallength"),
+  ALDR = c("ALDR", "age_start"),
+  MUSSEL_LENGTH = c("Mussellängd"),
+  EGG_LENGTH = c("ägglängd")
+)
+esbase_optional <- c("MUSSEL_LENGTH", "EGG_LENGTH")
+
+# The extract (Excel or semicolon-separated CSV) with standard column names
+read_esbase_raw <- function(cfg) {
+  file <- data_dir(cfg$raw_data$esbase_file)
+  raw <- if (grepl("\\.csv$", file, ignore.case = TRUE)) {
+    readr::read_csv2(file, guess_max = 100000, show_col_types = FALSE)
+  } else {
+    readxl::read_excel(file, guess_max = 100000)
+  }
+  extra <- cfg$raw_data$esbase_columns %||% list()
+  out <- tibble::tibble(.rows = nrow(raw))
+  for (field in names(esbase_columns)) {
+    found <- intersect(c(unlist(extra[[field]]), esbase_columns[[field]]), names(raw))[1]
+    if (is.na(found)) {
+      if (field %in% esbase_optional) {
+        out[[field]] <- NA
+        next
+      }
+      stop("esbase extract: no column for ", field, ". Looked for: ",
+           paste(c(unlist(extra[[field]]), esbase_columns[[field]]), collapse = ", "),
+           ". Columns in ", basename(file), ": ", paste(names(raw), collapse = ", "),
+           ". Add the name under raw_data: esbase_columns: ", field, " in the config.",
+           call. = FALSE)
+    }
+    out[[field]] <- raw[[found]]
+  }
+  out
+}
+
 # As in the SGU submission script. Sex uses SGU codes, which
 # MoCiS2::moc_join_SGU() needs to pool sexes correctly.
 read_esbase <- function(cfg) {
-  raw <- readxl::read_excel(data_dir(cfg$raw_data$esbase_file), guess_max = 100000)
-  # Mussel and egg lengths (mm) have their own columns, present only when
-  # mussel and bird data is included in the extract
-  for (col in c("Mussellängd", "ägglängd")) {
-    if (!col %in% names(raw)) raw[[col]] <- NA_real_
-  }
   birds <- c("Uria aalge", "Sterna hirundo", "Haematopus ostralegus")
-  raw |>
+  read_esbase_raw(cfg) |>
     dplyr::transmute(
-      PROV_KOD_ORIGINAL = ACCNR_ESBASE,
+      PROV_KOD_ORIGINAL = ACCNR,
       PROVTAG_DAT = as.Date(DATE),
       KON = dplyr::case_when(
         SPECIES %in% birds ~ "I",
@@ -173,8 +213,8 @@ read_esbase <- function(cfg) {
         SEX %in% c("female", "Hona", "2") ~ "F"),
       TOTV = as.numeric(TOTV),
       TOTL = dplyr::case_when(
-        SPECIES == "Mytilus edulis" ~ as.numeric(Mussellängd) / 10,
-        SPECIES %in% birds ~ as.numeric(ägglängd) / 10,
+        SPECIES == "Mytilus edulis" ~ as.numeric(MUSSEL_LENGTH) / 10,
+        SPECIES %in% birds ~ as.numeric(EGG_LENGTH) / 10,
         TRUE ~ as.numeric(TOTL)),
       ALDR = as.numeric(ALDR)
     )

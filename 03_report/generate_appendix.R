@@ -29,6 +29,7 @@ options(
 
 rmd_file <- file.path(report_dir, paste0("appendix_", cfg$run_name, ".Rmd"))
 appendix(contents, rmd_file,
+         sections = cfg$report$sections,
          exclude_maps = unlist(cfg$report$exclude_maps),
          header_values = appendix_header_values(cfg))
 pdf_file <- rmarkdown::render(rmd_file, envir = new.env(), quiet = TRUE)

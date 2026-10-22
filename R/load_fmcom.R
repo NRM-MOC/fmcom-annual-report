@@ -13,7 +13,17 @@ load_fmcom <- function(cfg) {
 # is marked source = "new_year".
 load_fmcom_with_new_year <- function(cfg) {
   new_year <- readRDS(file.path(output_dir(cfg, create = FALSE), "new_year_data.rds"))
-  load_fmcom(cfg) |>
+  fmcom <- load_fmcom(cfg)
+  # fmcom should end the year before the report year. Data from the report
+  # year onward is dropped so no year is included twice (e.g. when testing
+  # with an earlier year's lab files).
+  later <- fmcom$year >= cfg$year
+  if (any(later)) {
+    message("fmcom: dropped ", sum(later), " rows from ", cfg$year,
+            " onward (replaced by the new year's data)")
+    fmcom <- fmcom[!later, ]
+  }
+  fmcom |>
     dplyr::mutate(dplyr::across(dplyr::where(is.factor), as.character),
                   source = "fmcom") |>
     dplyr::bind_rows(new_year)

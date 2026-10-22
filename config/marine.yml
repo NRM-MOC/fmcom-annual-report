@@ -10,6 +10,8 @@ year: 2025           # last year of data included in the report
 # (FMCOM_DATA_DIR, default data/). Lab file names change every year, so list
 # the exact files (and versions) used for the report.
 raw_data:
+  # Winter conditions affect contaminant concentrations in marine biota
+  exclude_winter: true
   lab_files_dir: marine/lab_files
   esbase_file: marine/esbase/Marina 2025 fiskar.xlsx
   lab_files:
@@ -78,5 +80,12 @@ report:
   text_file: 03_report/text/marine.Rmd
   thresholds_file: config/report/thresholds_marine.csv
   thresholds_note: "Sum(PBDE) in the report is the sum of five congeners (BDE-47, -99, -100, -153, -154) as BDE-28 has not been analyzed most years; the contribution of BDE-28 to the sum is typically small."
+  # Parts of each substance's section, in this order: template in
+  # 03_report/rmd/ and the species codes (config/lookups/species.csv) it shows
+  sections:
+    - {template: CLUPsection.Rmd, species: [CLUP]}
+    - {template: FISHsection.Rmd, species: [GADU, ZOAR, PERC]}
+    - {template: MUSSELsection.Rmd, species: [MYTI]}
+    - {template: EGGsection.Rmd, species: [SIGR, HAEM, STER]}
   # No maps for these substances (no data, or mostly below LOQ)
   exclude_maps: [CR, AHCH, LINDAN, PFHXA, PFHPA, LPFBS, LPFDS, PFDS]

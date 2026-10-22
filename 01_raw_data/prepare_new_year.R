@@ -17,9 +17,12 @@ master <- load_master_tables()
 new_year <- to_fmcom_format(lab$data, bio, master, year = cfg$year)
 qc <- qc_step1(cfg, lab, bio, new_year, master)
 
-# Winter conditions affect contaminant concentrations; winter samples are
-# listed in the QC output but left out of the data
-new_year <- dplyr::filter(new_year, !season %in% "Winter")
+# Marine: winter conditions affect contaminant concentrations, so winter
+# samples are listed in the QC output and left out of the data
+# (config raw_data: exclude_winter:)
+if (isTRUE(cfg$raw_data$exclude_winter)) {
+  new_year <- dplyr::filter(new_year, !season %in% "Winter")
+}
 
 saveRDS(new_year, file.path(output_dir(cfg), "new_year_data.rds"))
 readr::write_csv(new_year, file.path(output_dir(cfg), "new_year_data.csv"), na = "")

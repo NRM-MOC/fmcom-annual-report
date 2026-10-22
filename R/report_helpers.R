@@ -32,34 +32,29 @@ appendix_header_values <- function(cfg) {
   )
 }
 
-appendix_section <- function(section_contents){
+# One part per species group with results for this substance. `sections`
+# (config report: sections:) gives each part's template and species codes.
+appendix_section <- function(section_contents, sections){
   var <- section_contents$var[1]
   var_name <- section_contents$var_name[1]
   maps <- section_contents$maps[1]
   cat(paste("\n\n##", var_name, "\n\n"))
-  if (sum(section_contents$gen == "CLUP") > 0){
-    knitr::knit_expand(file = report_template("CLUPsection.Rmd")) |> cat(sep = "\n")
-  }
-  if (sum(section_contents$gen %in% c("GADU", "ZOAR", "PERC")) > 0){
-    knitr::knit_expand(file = report_template("FISHsection.Rmd")) |> cat(sep = "\n")
-  }
-  if (sum(section_contents$gen == "MYTI") > 0){
-    knitr::knit_expand(file = report_template("MUSSELsection.Rmd")) |> cat(sep = "\n")
-  }
-  if (sum(section_contents$gen %in% c("SIGR", "HAEM", "STER")) > 0){
-    knitr::knit_expand(file = report_template("EGGsection.Rmd")) |> cat(sep = "\n")
+  for (section in sections) {
+    if (any(section_contents$gen %in% unlist(section$species))) {
+      knitr::knit_expand(file = report_template(section$template)) |> cat(sep = "\n")
+    }
   }
 }
 
-appendix_chapter <- function(chapter_contents){
+appendix_chapter <- function(chapter_contents, sections){
   contents <- split(chapter_contents, chapter_contents$var_order)
   cat(paste("\n\n#", chapter_contents$group[1], "\n\n"))
-  purrr::map(contents, appendix_section)
+  purrr::map(contents, appendix_section, sections = sections)
 }
 
 # `header_values`: values for the {{...}} fields in header.Rmd (title,
 # authors, file paths, programme wording)
-appendix <- function(contents, file_name, exclude_maps = NULL, header_values = list()){
+appendix <- function(contents, file_name, sections, exclude_maps = NULL, header_values = list()){
   contents <- dplyr::mutate(contents, maps = !(var %in% exclude_maps)) |>
     split(contents$group_order)
   con <- file(file_name, open = "wt", encoding = "UTF-8")
@@ -67,6 +62,6 @@ appendix <- function(contents, file_name, exclude_maps = NULL, header_values = l
   on.exit({ sink(); close(con) })
   do.call(knitr::knit_expand, c(list(file = report_template("header.Rmd")), header_values)) |>
     cat(sep = "\n")
-  purrr::map(contents, appendix_chapter)
+  purrr::map(contents, appendix_chapter, sections = sections)
   cat("\n\n# References\n\n")
 }

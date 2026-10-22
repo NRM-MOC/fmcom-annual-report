@@ -28,8 +28,8 @@ qc_step1 <- function(cfg, lab, bio, new_year, master) {
   # reported as a count per species
   analysed_species <- unique(stats::na.omit(new_year$species))
   lab_specimens <- unpool_ids(unique(d$PROV_KOD_ORIGINAL))
-  esbase_only <- readxl::read_excel(data_dir(cfg$raw_data$esbase_file), guess_max = 100000) |>
-    dplyr::filter(SPECIES %in% analysed_species, !ACCNR_ESBASE %in% lab_specimens) |>
+  esbase_only <- read_esbase_raw(cfg) |>
+    dplyr::filter(SPECIES %in% analysed_species, !ACCNR %in% lab_specimens) |>
     dplyr::count(SPECIES)
 
   dplyr::bind_rows(
@@ -70,7 +70,8 @@ qc_step1 <- function(cfg, lab, bio, new_year, master) {
              individuals$in_esbase & is.na(individuals$KON)),
     qc_item("Esbase specimens of analysed species without lab data (count per species)",
             paste0(esbase_only$SPECIES, ": ", esbase_only$n, recycle0 = TRUE)),
-    qc_item("Winter samples (excluded from the new-year data)",
+    qc_item(paste0("Winter samples (", if (isTRUE(cfg$raw_data$exclude_winter)) "excluded from" else "kept in",
+                   " the new-year data)"),
             paste(winter$species, winter$specimen_ID)),
     qc_item("Samples dated outside the report year",
             paste(other_year$specimen_ID, other_year$date)),

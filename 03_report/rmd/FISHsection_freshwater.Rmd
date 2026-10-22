@@ -1,0 +1,43 @@
+
+###  Pike and Arctic Char
+
+```{r, echo = FALSE}
+# Base path for HARSAT output (figures & tables). Set from generate_appendix.R via
+# options(appendix.base_path = ...).
+base_path <- getOption("appendix.base_path")
+```
+
+#### Summary statistics
+
+```{r, results = "asis", echo = FALSE}
+fish_table_path <- file.path(base_path, "tables", "{{var}}_fish_table.csv")
+if (file.exists(fish_table_path)){
+  read_csv(fish_table_path) %>%
+    kable("latex", booktabs = TRUE, escape = FALSE, align = c(rep("l", 2), rep("r", 14)),
+          caption = paste(tex("{{var_name}}"), "in pike and arctic char.", tab_caption("{{var}}"))) %>%
+    add_header_above(c(" "=5, "Whole time period"=6, "Last 10 years"=2)) %>%
+    kable_styling(latex_options = c("scale_down", "hold_position"))
+} else
+{
+  print(paste(fish_table_path, "is missing"))
+
+}
+```
+
+
+#### Station time-series
+
+```{r, fig.width = 4, out.width = "0.33\\textwidth", fig.asp= 1.3, echo = FALSE}
+figs_dir <- file.path(base_path, "figs")
+plot_files_SALV <- dir(figs_dir) %>%
+  subset(., str_detect(., "SALV_{{var}}.pdf")) %>%
+  order_figs()
+plot_files_ESOX <- dir(figs_dir) %>%
+  subset(., str_detect(., "ESOX_{{var}}.pdf")) %>%
+  order_figs()
+plot_files <- file.path(figs_dir, c(plot_files_SALV, plot_files_ESOX)) %>%
+  subset(., file.exists(.))
+knitr::include_graphics(plot_files)
+```
+
+

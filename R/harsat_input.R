@@ -97,6 +97,9 @@ write_harsat_input <- function(cfg, data) {
   utils::write.csv(dplyr::select(stations, -station_code_SGU, -season),
                    file.path(dir, "stations.csv"), na = "", row.names = FALSE)
 
+  # Species not assessed in this programme (config harsat: exclude_species:)
+  data <- dplyr::filter(data, !species %in% unlist(cfg$harsat$exclude_species))
+
   rows <- vapply(names(cfg$harsat$groups), function(group) {
     settings <- cfg$harsat$groups[[group]]
     input <- if (isTRUE(settings$biological)) {
