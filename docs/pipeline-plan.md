@@ -73,14 +73,16 @@ Agreed on 2026-10-13, after reading through the MCOM2025 baseline scripts:
 
 The yearly publication is the appendix-style PDF ("Graphic and statistical overview ..."), built by `03_report/generate_appendix.R`. The old `generate_report_stuff.R` (main-report figures) is obsolete and has been removed.
 
-### The yearly cycle and SGU
+### The yearly cycle and the National Contaminants database
 
-Nothing in this pipeline goes to SGU. The cycle is:
+The data is reported to the [National Contaminants database](https://www.sgu.se/produkter-och-tjanster/datavardskapen-grundvatten-och-miljogifter/rapporterad-data-till-datavardskap-for-miljogifter/) (Datavärdskap för miljögifter), hosted at the Geological Survey of Sweden (SGU). The database is only available in Swedish, which makes it hard to use for researchers who don't read Swedish. Codes and names from the database keep "SGU" in their names in fmcom and MoCiS2 (e.g. `station_code_SGU`, `contaminant_code_SGU`, `contaminants_SGU_NRM.csv`).
 
-1. **Before the report:** last year's data, downloaded from SGU after their QC, is added to fmcom (in the fmcom repo).
+Nothing in this pipeline goes to the national database. The cycle is:
+
+1. **Before the report:** last year's data, downloaded from the national database after its QC, is added to fmcom (in the fmcom repo).
 2. **The report (this pipeline):** the new year's data is read from the lab files, QC'd, temporarily attached to fmcom, and run through HARSAT, tables, figures and the report.
-3. **After the report:** the QC'd new-year data is converted and submitted to SGU through a separate pipeline, which adds another QC layer.
-4. **Next year:** that data is downloaded from SGU and added to fmcom, and the cycle starts again.
+3. **After the report:** the QC'd new-year data is converted and submitted to the national database through a separate pipeline, which adds another QC layer.
+4. **Next year:** that data is downloaded from the national database and added to fmcom, and the cycle starts again.
 
 The pipeline is still not one continuous run. There are **two QC checkpoints**, and `run.R` makes both explicit:
 
@@ -120,7 +122,7 @@ Today both checkpoints are visual, human review. **Later:** make more of the ste
 
 1. **The code.** It's in this repo, and the git tag (e.g. `marine-2025`) marks the exact version used.
 2. **The historical data (fmcom).** It comes from the public fmcom package (github.com/NRM-MOC/fmcom, version 0.3.0 = data through 2024 at the time of writing). It's installed through renv, and `renv.lock` records the exact fmcom commit used, so restoring the project gets the same historical data back.
-3. **The new year's data.** It comes from the raw lab files, which are *not* in the repo (gitignored, and not public). It's also the data *before* the SGU round trip. The SGU QC may change values, so the version that later ends up in fmcom can differ from what the report used.
+3. **The new year's data.** It comes from the raw lab files, which are *not* in the repo (gitignored, and not public). It's also the data *before* it goes through the national database. The database's QC may change values, so the version that later ends up in fmcom can differ from what the report used.
 
 **The idea:** Step 1 saves its final processed new-year dataset as a frozen file, e.g. `output/marine_2025/new_year_data.rds`, and that file is archived on the shared drive alongside the published report. Together these define the report completely:
 
@@ -160,21 +162,21 @@ Today both checkpoints are visual, human review. **Later:** make more of the ste
 
 ### Step 1: how the new year's data is built (implemented 2026-10-21)
 
-Step 1 mirrors fmcom's `data-raw/adding_next_year_fmcom.R`, which converts the SGU download into fmcom rows. Step 1 starts from the lab files read with MoCiS2 instead, i.e. the same data before it goes to SGU. That way the temporary new-year dataset looks the way the data will look in fmcom next year. Differences from the fmcom script are marked "Differs from fmcom" in `R/raw_data.R`.
+Step 1 mirrors fmcom's `data-raw/adding_next_year_fmcom.R`, which converts the national database download into fmcom rows. Step 1 starts from the lab files read with MoCiS2 instead, i.e. the same data before it goes to the national database. That way the temporary new-year dataset looks the way the data will look in fmcom next year. Differences from the fmcom script are marked "Differs from fmcom" in `R/raw_data.R`.
 
 - **Lab files** are listed in `config/<programme>.yml`, because their names change every year. Step 1 warns about `.xlsm` files in the folder that aren't listed, and ignores Excel lock files (`~$`).
-- **Stations and contaminants** are joined to the fmcom master tables on SGU codes (`PROVPLATS_ID` = `station_code_SGU`, `UNIK_PARAMETERKOD` = `contaminant_code_SGU`), not on names. Extra spaces in the master tables are stripped on reading.
+- **Stations and contaminants** are joined to the fmcom master tables on the national database codes (`PROVPLATS_ID` = `station_code_SGU`, `UNIK_PARAMETERKOD` = `contaminant_code_SGU`), not on names. Extra spaces in the master tables are stripped on reading.
 - **CB-118U** (CB118 from the Umeå lab) is kept as CB118 with laboratory UMU, as fmcom has it. From 2025, CLC is no longer measured, so it's the only CB118 source, and HARSAT's TEQ sums need it.
 - **Isotopes** are included whenever an SI file is listed (read with `negative_for_nondetect: false`). The step 1 output is a temporary dataset, also used during the year, but it doesn't need to be complete.
-- **Censoring:** `LOQ_LOD` and `is_censored` come from MoCiS2's flags: `b` → `<LOD`, `q` → `<LOQ`, `q` + `Ja` → `>LOD, <LOQ`. This differs from fmcom, whose SGU download seems to lose `Ja` (reported as an fmcom issue). **Uncertainty** is MoCiS2's `MATOSAKERHET`, which is in the same unit as the value.
-- **Method rules** (`config/method_rules.csv`): egg content needs a different extraction method than the one the lab reports for all tissues. The rules are BFR `SLV_m064_f3` → `f4` and CLC `SLV_m063_f3` → `f2`. They match on the reported method, so fat % rows are never changed. In fmcom format both BFR methods map to `SFA_CLC_BFR`, so the rule matters mainly for the SGU submission.
+- **Censoring:** `LOQ_LOD` and `is_censored` come from MoCiS2's flags: `b` → `<LOD`, `q` → `<LOQ`, `q` + `Ja` → `>LOD, <LOQ`. This differs from fmcom, whose national database download seems to lose `Ja` (reported as an fmcom issue). **Uncertainty** is MoCiS2's `MATOSAKERHET`, which is in the same unit as the value.
+- **Method rules** (`config/method_rules.csv`): egg content needs a different extraction method than the one the lab reports for all tissues. The rules are BFR `SLV_m064_f3` → `f4` and CLC `SLV_m063_f3` → `f2`. They match on the reported method, so fat % rows are never changed. In fmcom format both BFR methods map to `SFA_CLC_BFR`, so the rule matters mainly for the submission to the national database.
 - **As in fmcom:**
   - bismuth (`Bi`) is kept
   - PFAS in muscle is removed (only liver is used)
   - pooled samples get sex "Mixed"
   - eggs get age 0
   - fat % and dry weight % are attached per lab sample (`sample_ID`)
-  - the metals file's `TPRC` is dropped, as in the SGU submission script
+  - the metals file's `TPRC` is dropped, as in the national database submission script
 - **Samples without esbase data** (no date) get their year from the config and are listed in the QC output.
 - **Identical rows from a lab file** are removed and counted in the QC output. In 2025, the PFAS file listed FHXSA twice in its accreditation list, which made MoCiS2 repeat every FHXSA row.
 - **Checked against the old script** on the 2025 files: in the 5,221 rows both produced, every value and unit is identical. All other differences come from the decisions above.
@@ -187,18 +189,7 @@ Step 1 mirrors fmcom's `data-raw/adding_next_year_fmcom.R`, which converts the S
 
 ### Checklist: adding a new contaminant
 
-For example, the new PFAS compounds that will be added over the coming years. Update these, in pipeline order, as far as the substance should go:
-
-1. **MoCiS2 code list** (`inst/extdata/codelist.xlsx`, sheet `PARAMETRAR`, in NRM-MOC/MoCiS2): needed for the lab file code to be read at all.
-   *If missing:* MoCiS2 warns "Unable to match the following substance codes", the rows are dropped, and the warning appears in `qc_step1.csv`.
-2. **fmcom master table** (`data-raw/master_tables/contaminants_SGU_NRM.csv` in NRM-MOC/fmcom): gives the SGU code its fmcom name and substance group.
-   *If missing:* `qc_step1.csv` reports "Substance codes not in the fmcom master table".
-3. **HARSAT information files** (`config/harsat/determinand.csv`, plus `thresholds_biota.csv` if there is a threshold): needed for HARSAT to assess it. If the substance is part of a sum (e.g. PFAS-24), also update `config/harsat/determinand_sums.yml`.
-   *If missing:* HARSAT leaves it out. That's intended until there are enough years of data, at least 5–10, before showing trends.
-4. **Report names** (`config/lookups/determinands.csv`): the name shown in plots, tables and the appendix, its report group and its order within the group.
-   *If missing:* step 2c warns "Assessed but not in config/lookups/determinands.csv", and the substance is left out of the appendix.
-
-If the substance belongs to a new substance group, also add the group to `harsat: groups:` in `config/<programme>.yml`.
+Moved to the README ("Adding a new contaminant").
 
 ### Later additions
 
