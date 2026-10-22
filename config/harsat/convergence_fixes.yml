@@ -17,6 +17,9 @@ fixes:
   - {fixed_bound: 30, for: [fixed_bound]}
   - {random_bound: 5, for: [random_bound]}
   - {hess.d: 0.0001, hess.r: 8, for: [standard_error]}
+  # Test (2025): a ten times smaller step. Resolved HAFJ HPCDF1 Clupea harengus
+  # MU when the fix above did not; check such series visually
+  - {hess.d: 0.00001, hess.r: 8, for: [standard_error]}
   - {fixed_bound: 10, hess.d: 0.0001, hess.r: 8}
   - {fixed_bound: 20, hess.d: 0.0001, hess.r: 8}
   - {fixed_bound: 30, hess.d: 0.0001, hess.r: 8}
