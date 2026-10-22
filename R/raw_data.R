@@ -160,15 +160,15 @@ read_method_rules <- function() {
 esbase_columns <- list(
   ACCNR = c("ACCNR_ESBASE", "ACCNR", "accnr"),
   DATE = c("DATE", "death_date_start", "discovery_date_start"),
-  SPECIES = c("SPECIES", "species", "lat_name"),
-  SEX = c("SEX", "gender"),
-  TOTV = c("TOTV", "weight"),
-  TOTL = c("TOTL", "totallength"),
+  SPECIES = c("SPECIES", "species", "lat_name", "species_lat"),
+  SEX = c("SEX", "gender", "sex"),
+  TOTV = c("TOTV", "weight", "specimen_weight"),
+  TOTL = c("TOTL", "totallength", "total_length"),
   ALDR = c("ALDR", "age_start"),
   MUSSEL_LENGTH = c("Mussellängd"),
   EGG_LENGTH = c("ägglängd"),
   # esbase's location (ID or name), only used in QC
-  LOCATION = c("LOCID_ESBASE", "locality", "Lokal")
+  LOCATION = c("LOCID_ESBASE", "locality", "Lokal", "locality_name")
 )
 esbase_optional <- c("MUSSEL_LENGTH", "EGG_LENGTH", "LOCATION")
 
