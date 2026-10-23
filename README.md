@@ -1,8 +1,8 @@
 # fmcom-annual-report
 
-Reproducible pipeline for the annual reports on temporal trends and spatial variation in the Swedish National Monitoring Programmes for Contaminants in Freshwater and Marine Biota. It combines the historical data in [fmcom](https://github.com/NRM-MOC/fmcom) with the new year's lab results, assesses the time series with [HARSAT](https://github.com/osparcomm/HARSAT) and produces the report ("Graphic and statistical overview ...") as a PDF.
+Reproducible pipeline for the annual reports on temporal trends and spatial variation in the Swedish National Monitoring Programmes for Contaminants in Freshwater and Marine Biota. It combines the historical data in [fmcom](https://github.com/NRM-MOC/fmcom) (the Freshwater and Marine Contaminant Monitoring dataset) with the new year's lab results, assesses the time series with [HARSAT](https://github.com/osparcomm/HARSAT) and produces the report ("Graphic and statistical overview ...") as a PDF.
 
-Working on the report is also how the new year's data is quality-checked before it is submitted to the [National Contaminants database](https://www.sgu.se/produkter-och-tjanster/datavardskapen-grundvatten-och-miljogifter/rapporterad-data-till-datavardskap-for-miljogifter/) hosted at the Geological Survey of Sweden (SGU). The database is only available in Swedish.
+Working on the report is also how the new year's data is quality-checked before it is submitted to the [National Contaminants database](https://www.sgu.se/produkter-och-tjanster/datavardskapen-grundvatten-och-miljogifter/rapporterad-data-till-datavardskap-for-miljogifter/) hosted at the Geological Survey of Sweden (SGU) (database only available in Swedish).
 
 > **Status:** marine and freshwater both run end to end. Marine was validated against the scripts used for the 2025 report; freshwater has been tested with the 2024 data.
 
