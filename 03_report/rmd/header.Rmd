@@ -151,7 +151,7 @@ and species over the entire sampling period:
 *Y-axis units for contaminants*: $ww$: wet weight; $dw$: dry weight; $lw$: lipid weight;
 
 *Data*: Small points represent the measured concentration in an individual or a pooled sample (i.e. one
-point equals one observation); Big circular points represents annual geometric mean values; Open blue circles indicate observations under the limit of quantification (LOQ).
+point equals one observation); Big circular points represents annual geometric mean values; Open blue circles indicate observations under the limit of quantification (LOQ). Grey points (filled above LOQ, open below LOQ) are years not included in the trend analysis: HARSAT leaves out years before a six-year period without sampling (counted in six-year blocks back from the last year), early years in which fewer than half of the years have values above LOQ, and, in a few series, early years that prevented the model from converging.
 
 *Trend lines*: 1-2 years: no model is fitted because there are insufficient data;
 3-4 years: concentrations are assumed to be stable over time and the mean log concentration is estimated;
