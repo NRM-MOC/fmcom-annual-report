@@ -1,83 +1,105 @@
-#######################################################################v
-# Calculating generic uncertainties for HARSAT determinand.csv file ####
-#######################################################################v
+# Generic uncertainties for config/harsat/determinand.csv ----
+#
+# HARSAT uses biota_sd_constant and biota_sd_variable only for values without
+# a reported uncertainty: SD = sqrt(sd_constant^2 + (sd_variable * value)^2).
+# Both must be standard deviations: sd_constant in the determinand's
+# biota_unit on a wet-weight basis (HARSAT converts it to the series' basis),
+# sd_variable as a relative SD.
+#
+# Estimated as in HARSAT's own ctsm_uncrt_estimate(), from fmcom (marine and
+# freshwater together, since both programmes use the same laboratories):
+#   sd_variable: the labs report the expanded uncertainty (U2, k = 2), so the
+#     relative SD is U2 / (2 * value). Median per laboratory, then median over
+#     laboratories, using detected values with a relative SD of 1-100 %.
+#   sd_constant: LOD / 3 (values reported as <LOD) or LOQ / 10 (<LOQ), the
+#     same rule HARSAT applies to censored values. Median per laboratory, then
+#     median over laboratories.
+#
+# Run from the project folder. Writes to output/tools/ and does not change
+# determinand.csv unless `update_determinand` is TRUE. Determinands that
+# can't be estimated (e.g. the biological variables) keep their current
+# values.
 
 library(tidyverse)
-library(readxl)
 
-## Read data from database ----
-G_sd <- mcomDb::MCoM |>
-  select(specimen_ID:uncertainty)      
+update_determinand <- FALSE
 
-## Create dataframe for contaminants without data < LOQ ----
-## sd_constant as "LOD/3" of reported 2022 data
-## mean_value (LOD) as mean(LOD) of reported 2022 data
-## TEQ LOD is set equal to PECDF2
-substance_group <- c(rep(c('Metals'),5),rep(c('PCBs'),12),rep(c('Dioxins and furans'),3),rep(c('PAH'),3))
-contaminant     <- c('Hg','As','Cu','Se','Zn',
-                 'CB77','CB81','CB126','CB169','CB105','CB114','CB118','CB123','CB156','CB157','CB167','CB189',
-                 'TCDF','PECDF2','TEQDFP',
-                 'FLU','CHR','BBF')
-unit            <- c('ug/kg ww',(rep(c('ug/g dw'),4)),(rep(c('pg/kg'),12)),rep(c('ng/kg'),3),rep(c('ug/kg'),3))
-mean_value      <-c(0.8,0.06,0.11,0.06,0.59,rep(c(0.23),4),rep(c(2.34),8),0.23,0.23,0.23,0.31,0.12,0.16)
-extra           <- data.frame(substance_group,contaminant,unit,mean_value) |>
-                   mutate(biota_sd_constant=mean_value/3)
+# Reported limits known to be wrong in fmcom (to be corrected in the data)
+exclude_constant <- c("CB77", "CB189", "FLU")
 
-## Sd_constant determined as LOD/3 (in some cases LOQ/3) ----
-## for each contaminant across all years
-sd_constant <- G_sd |>
-  filter(LOQ_LOD == "<LOQ" | LOQ_LOD == "<LOD" | LOQ_LOD == "LOQ or <LOD") |>
-  mutate(sd_constant = value/3) |>
-  ### remove incorrect LOD values for two dioxins (should be corrected in dataset) ----
-  filter(contaminant!='CB77') |> filter(contaminant!='CB189') |> filter(contaminant!='FLU') |>
-  group_by(substance_group,contaminant,unit) |>
-  summarize(biota_sd_constant = mean(sd_constant), mean_value= mean(value)) |>
-  ungroup() |>
-  bind_rows(extra)
+out_dir <- here::here("output", "tools")
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+determinand_file <- here::here("config", "harsat", "determinand.csv")
+determinand <- read.csv(determinand_file, check.names = FALSE)
 
-## Create file with average LOD (LOQ) values ----
-sd_constant_join <- sd_constant |>
-  select(c(contaminant, mean_value)) 
+## fmcom values on a wet-weight basis in the determinand's unit ----
+# fmcom units look like "ng.g-1.lw-1": amount per g, then basis
+unit_factor <- c(ug = 1, ng = 1e-3, pg = 1e-6)            # to mg/kg
+biota_unit_factor <- c("mg/kg" = 1, "ug/kg" = 1e-3, "ng/kg" = 1e-6)
 
-## Sd_variable determined as the relative proportion of the ----
-## uncertainty to the concentration (should be between 0.1-0.4)
-sd_variable <- G_sd |>
-  filter(!is.na(uncertainty)) |>
-  filter( LOQ_LOD == ">LOQ" | LOQ_LOD == ">LOD") |> 
-  ### filter X times LOD (LOQ) to only keep uncertainty for data well above LOQ observations ----
-  left_join(sd_constant_join, by = 'contaminant') |>
-  mutate(value = if_else(value < (mean_value*2), NA, value))|>
-  drop_na(value) |>
-  ### create % uncertainty value ----
-  mutate(uncertainty_perc = uncertainty/value*100) |>
-  group_by(substance_group,contaminant,unit) |>
-  summarize(biota_sd_variable = mean(uncertainty_perc)/100) |>
-  ungroup()
+data <- fmcom::fmcom |>
+  filter(!is.na(value), value > 0) |>
+  mutate(
+    determinand = toupper(if_else(contaminant == "CB138and163", "CB138", as.character(contaminant))),
+    prefix = str_extract(as.character(unit), "^[a-z]+"),
+    basis = str_extract(as.character(unit), "(ww|dw|lw)"),
+    to_ww = case_when(basis == "ww" ~ 1,
+                      basis == "dw" ~ dry_weight_percentage / 100,
+                      basis == "lw" ~ fat_percentage / 100)
+  ) |>
+  inner_join(select(determinand, determinand, biota_unit), by = "determinand") |>
+  mutate(factor = unit_factor[prefix] / biota_unit_factor[biota_unit] * to_ww)
 
-## Merge sd's ----
-sd <- full_join(sd_variable,sd_constant,by=c('substance_group','contaminant')) |>
-  select(-c('unit.x','unit.y','mean_value')) |>
-  rename(determinand= 'contaminant') |>
-  ### fill NAs with group averages ----
-  group_by(substance_group) |>
-  mutate(biota_sd_variable = case_when(
-    is.na(biota_sd_variable) ~ mean(biota_sd_variable, na.rm=TRUE),
-    TRUE ~as.numeric(biota_sd_variable)
-  )) |>
-  ungroup() |>
-  mutate_all(.funs=toupper) |>
-  mutate(    biota_sd_variable = as.numeric(biota_sd_variable),
-             biota_sd_constant = as.numeric(biota_sd_constant)) |>
-  select(-c('substance_group'))|>
-  ### round to avoid error when reading into HARSAT ----
-  mutate_if(is.numeric, round, digits = 5)
+## sd_variable ----
+relative <- data |>
+  filter(!is_censored, LOQ_LOD != ">LOD, <LOQ", !is.na(uncertainty)) |>
+  mutate(relative_sd = uncertainty / (2 * value))
 
-## Read determinand.csv file and add new info ----
-determinand <- read.csv("information/determinand.csv") |>
-  select(-c('biota_sd_variable','biota_sd_constant')) |>
-  left_join(sd, by = 'determinand') |>
-  select(c(determinand:water_auxiliary,biota_sd_constant,biota_sd_variable,sediment_sd_constant:good_status)) 
+implausible <- filter(relative, !between(relative_sd, 0.01, 1))
+write_csv(select(implausible, water_type, year, laboratory, substance_group, contaminant,
+                 value, uncertainty, unit, relative_sd, specimen_ID, sample_ID),
+          file.path(out_dir, "implausible_uncertainties.csv"))
 
-## Write database files to csv ----
-write.csv(determinand,"information/determinand.csv",na="",row.names=FALSE)
+sd_variable <- relative |>
+  filter(between(relative_sd, 0.01, 1)) |>
+  summarise(sd = median(relative_sd), n = n(), .by = c(determinand, laboratory)) |>
+  summarise(new_sd_variable = median(sd), n_variable = sum(n),
+            labs_variable = paste(sort(laboratory), collapse = " "), .by = determinand)
 
+## sd_constant ----
+sd_constant <- data |>
+  filter(LOQ_LOD %in% c("<LOD", "<LOQ"), !determinand %in% exclude_constant,
+         !is.na(factor)) |>
+  mutate(sd = value * factor / if_else(LOQ_LOD == "<LOD", 3, 10)) |>
+  summarise(sd = median(sd), n = n(), .by = c(determinand, laboratory)) |>
+  summarise(new_sd_constant = median(sd), n_constant = sum(n),
+            labs_constant = paste(sort(laboratory), collapse = " "), .by = determinand)
+
+## Comparison with the current values ----
+comparison <- determinand |>
+  filter(biota_assess %in% TRUE) |>
+  select(determinand, biota_group, biota_unit,
+         current_sd_constant = biota_sd_constant, current_sd_variable = biota_sd_variable) |>
+  left_join(sd_constant, by = "determinand") |>
+  left_join(sd_variable, by = "determinand") |>
+  mutate(across(starts_with("new_"), \(x) signif(x, 4)),
+         ratio_sd_variable = round(new_sd_variable / current_sd_variable, 2),
+         ratio_sd_constant = round(new_sd_constant / current_sd_constant, 2))
+write_csv(comparison, file.path(out_dir, "generic_uncertainty_comparison.csv"), na = "")
+
+message("Written to ", out_dir, ": generic_uncertainty_comparison.csv (",
+        sum(!is.na(comparison$new_sd_variable)), " sd_variable and ",
+        sum(!is.na(comparison$new_sd_constant)), " sd_constant estimated of ",
+        nrow(comparison), " assessed determinands), implausible_uncertainties.csv (",
+        nrow(implausible), " rows outside 1-100 %)")
+
+## Optionally update determinand.csv ----
+if (update_determinand) {
+  updated <- determinand |>
+    left_join(select(comparison, determinand, new_sd_constant, new_sd_variable), by = "determinand") |>
+    mutate(biota_sd_constant = coalesce(new_sd_constant, biota_sd_constant),
+           biota_sd_variable = coalesce(new_sd_variable, biota_sd_variable)) |>
+    select(-new_sd_constant, -new_sd_variable)
+  write_csv(updated, determinand_file, na = "")
+  message("Updated ", determinand_file)
+}

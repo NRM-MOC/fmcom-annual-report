@@ -1,11 +1,11 @@
 reference_species,submitted_species,common_name,class,family,species_group,species_subgroup,assess,MU_drywt,LI_drywt,SB_drywt,EH_drywt,MU_lipidwt,LI_lipidwt,SB_lipidwt,EH_lipidwt
-Clupea harengus,Clupea harengus,Herring,,,Fish,Fish,TRUE,23.4,27.4,,,3.49,3.63,,
-Esox lucius,Esox lucius,Northern pike,,,Fish,Fish,TRUE,21.5,30.5,,,0.58,,,
-Gadus morhua,Gadus morhua,Cod,,,Fish,Fish,TRUE,19.3,48.68,,,,10.03,,
-Perca fluviatilis,Perca fluviatilis,European perch,,,Fish,Fish,TRUE,20.3,20.9,,,0.6,0.73,,
-Salvelinus alpinus,Salvelinus alpinus,Arctic char,,,Fish,Fish,TRUE,23.8,22.1,,,1.63,,,
-Zoarces viviparus,Zoarces viviparus,Eelpout,,,Fish,Fish,TRUE,18.3,20.81,,,,0.68,,
-Mytilus edulis,Mytilus edulis,Blue mussel,,,Bivalve,Mussel,TRUE,,,12.81,,,,1.28,
-Haematopus ostralegus,Haematopus ostralegus,Eurasian oystercatcher,,,Bird,Bird,TRUE,,,,25.1,,,,10.03
-Sterna hirundo,Sterna hirundo,Common tern,,,Bird,Bird,TRUE,,,,23.55,,,,9.4
-Uria aalge,Uria aalge,Common guillemot,,,Bird,Bird,TRUE,,,,27.73,,,,12.28
+Clupea harengus,Clupea harengus,Herring,,,Fish,Fish,TRUE,23.23,27.62,,,3.47,3.63,,
+Esox lucius,Esox lucius,Northern pike,,,Fish,Fish,TRUE,21.53,30.41,,,0.58,,,
+Gadus morhua,Gadus morhua,Cod,,,Fish,Fish,TRUE,19.31,49.6,,,,36.59,,
+Perca fluviatilis,Perca fluviatilis,European perch,,,Fish,Fish,TRUE,20.32,21.04,,,0.66,0.73,,
+Salvelinus alpinus,Salvelinus alpinus,Arctic char,,,Fish,Fish,TRUE,22.06,23.83,,,1.63,,,
+Zoarces viviparus,Zoarces viviparus,Eelpout,,,Fish,Fish,TRUE,18.31,21.01,,,0.67,,,
+Mytilus edulis,Mytilus edulis,Blue mussel,,,Bivalve,Mussel,TRUE,,,12.69,,,,1.28,
+Haematopus ostralegus,Haematopus ostralegus,Eurasian oystercatcher,,,Bird,Bird,TRUE,,,,25.11,,,,9.88
+Sterna hirundo,Sterna hirundo,Common tern,,,Bird,Bird,TRUE,,,,23.55,,,,9.48
+Uria aalge,Uria aalge,Common guillemot,,,Bird,Bird,TRUE,,,,27.77,,,,12.3

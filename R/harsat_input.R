@@ -56,9 +56,9 @@ to_harsat_format <- function(data, stations) {
       basis = lookup(unit, basis_from_unit),
       unit = lookup(unit, harsat_unit),
       censoring = dplyr::coalesce(lookup(LOQ_LOD, censoring_code), ""),
-      # Uncertainty as % of the value
-      uncertainty = uncertainty / value * 100,
-      unit_uncertainty = dplyr::if_else(is.na(uncertainty), "", "%")
+      # fmcom's uncertainty is the labs' expanded uncertainty (U2, k = 2) in
+      # the unit of the value; HARSAT halves it to a standard deviation
+      unit_uncertainty = dplyr::if_else(is.na(uncertainty), "", "U2")
     )
 
   # Fat %, dry weight % and biological variables as extra determinands
