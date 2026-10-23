@@ -73,7 +73,7 @@ A detailed description of the statistics can be found at: https://dome.ices.dk/o
 Due to the large number of regression analysis that underlies the statistic results, no formal checks of all statistical model results are done.
 
 ## Thresholds
-The threshold can be set in a different tissue than that which is analysed within the monitoring programme. The threshold used for evaluation in the report has in these cases been recalculated to represent the corresponding concentration of the threshold in the monitored tissue. EQS used can be found in @HVMFS2019. Choice and tissue conversions of EQS, EAC or other applicable thresholds are explained in @Soerensen2025marine and @Soerensen2025marine.
+The threshold can be set in a different tissue than that which is analysed within the monitoring programme. The threshold used for evaluation in the report has in these cases been recalculated to represent the corresponding concentration of the threshold in the monitored tissue. EQS used can be found in @HVMFS2019. Choice and tissue conversions of EQS, EAC or other applicable thresholds are explained in @Soerensen2025marine and @Soerensen2026.
 
 ```{r, results = "asis"}
 table_path <- getOption("appendix.thresholds")

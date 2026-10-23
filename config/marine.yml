@@ -69,11 +69,11 @@ tables_figures:
 report:
   title: "Graphic and statistical overview of temporal trends and spatial variations in the Swedish National Monitoring Programme for Contaminants in Marine Biota (including data through {year})"
   authors:
-    - "Anne L. Soerensen, Conny Jonsson, Anders Forsberg, Nellie Stjärnkvist,"
+    - "Anne L. Soerensen, Conny Jonsson, Nellie Stjärnkvist, Claudia H. Samuelsson, "
     - "and Suzanne Faxneld"
   # "Please cite as: <authors> (<year>). <title>, <publisher>."
   citation:
-    authors: "Soerensen, A.L., J. C. Jonsson, A. Forsberg, N. Stjärnkvist, S. Faxneld"
+    authors: "Soerensen, A.L., J. C. Jonsson, N. Stjärnkvist, C.H. Samuelsson, S. Faxneld"
     year: 2026   # publication year
     publisher: "Swedish Museum of Natural History, Stockholm, Sweden"
   biota: marine          # wording in the shared text ("... in marine biota")
