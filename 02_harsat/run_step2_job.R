@@ -2,7 +2,7 @@
 #
 # Runs steps 2a-2c (HARSAT input, HARSAT, tables and figures) in a separate R
 # session, so RStudio stays free while HARSAT runs. Start it from the console
-# (see the README, "Running HARSAT as a background job"):
+# (see docs/user-guide.md, "Running HARSAT as a background job"):
 #
 #   programme <- "marine"
 #   rstudioapi::jobRunScript(here::here("02_harsat", "run_step2_job.R"),

@@ -189,7 +189,7 @@ Step 1 mirrors fmcom's `data-raw/adding_next_year_fmcom.R`, which converts the n
 
 ### Checklist: adding a new contaminant
 
-Moved to the README ("Adding a new contaminant").
+Moved to the user guide (`docs/user-guide.md`, "Adding a new contaminant").
 
 ### Later additions
 
@@ -204,7 +204,7 @@ Moved to the README ("Adding a new contaminant").
 - **Rounding of trends for the biological variables (HARSAT):** HARSAT rounds `overall_change`, `recent_change` and `dtrend` to one decimal. That suits % per year for contaminants, but for the biological variables (`normal` distribution, trends in the variable's own unit per year) small changes in age or length show as 0.0. Possible change in HARSAT develop: more decimals, or significant figures, for `normal` series.
 - **Time trends for auxiliary biological data** (age, length, weight, fat %, etc.): add these to the report once everything else is in place. HARSAT couldn't previously run these statistics. The user has added support for them in the HARSAT develop version (1.0.6.1011).
 - **QC of the new year against earlier years** (not essential now; builds on "QC as its own output" under Technical requirements). Today's step 1 QC checks structure (codes, stations, esbase matches), and the visual QC looks at concentrations in the report figures. Neither catches problems in the **uncertainty, LOQ and LOD values**. Working with PFAS showed how much these can vary: after the lab switch in 2020, PFAS LOQs and uncertainties changed a lot from year to year, which makes observations hard to interpret. Idea: for each substance (and lab, species, tissue), compare the new year's concentrations, uncertainties (as U2 / value), LOD and LOQ with the previous ~5 years, and flag values outside the usual range, for example as a table and plots of the yearly distributions. It could be part of step 1 (new year's data plus fmcom) or a separate script in `tools/`. It would also catch issues like the implausible uncertainties found in fmcom (uncertainty larger than the value).
-- **Shorten the README (to decide):** the README (~1,700 words) serves both outside visitors and the yearly manual. Option: keep it as a front page (what it is, status, how it works, folders, short setup and run, data, licence) and move the manual to `docs/` (yearly workflow and publishing; adding a contaminant; esbase extract, biological variables and marine vs freshwater). Content unchanged, only moved.
+- **Shorten the README:** done 2026-10-26. The README is now a short front page, and the instructions for running the pipeline are in `docs/user-guide.md`.
 - **Biological data for birds and mussels:** this year the report only uses the biological (esbase) data for fish. Bird and mussel biological data aren't processed yet. They're included later, when data is reported to the national database.
 
 ### Freshwater changes to bring into the shared setup
