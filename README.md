@@ -83,6 +83,16 @@ Each step also writes `run_info_step<n>.yml`: code version, fmcom and HARSAT ver
 
 To run HARSAT (2b) and the tables and figures (2c) for some groups only, set e.g. `harsat_groups <- c("PAH")` before those steps.
 
+**Running HARSAT as a background job.** Step 2b takes several hours. To keep RStudio free while it runs, and to avoid the slow output in the console, run steps 2a–2c as an RStudio background job with `02_harsat/run_step2_job.R`. It runs in a separate R session; progress shows in RStudio's Background Jobs tab. Start it from the console:
+
+```r
+programme <- "marine"   # or "freshwater"
+rstudioapi::jobRunScript(here::here("02_harsat", "run_step2_job.R"),
+                         workingDir = here::here(), importEnv = TRUE)
+```
+
+`importEnv = TRUE` passes `programme` (and `harsat_groups`, if set) to the job. Run step 3 afterwards, once the convergence log has been checked.
+
 **Convergence.** Time series whose HARSAT model doesn't converge are diagnosed and refitted automatically with the fixes in `config/harsat/convergence_fixes.yml`. `harsat/convergence_log.csv` lists every series, what was tried and the fix that worked (or "unresolved"). Series fixed with the smaller hess step are worth a visual check.
 
 ## Biological variables
