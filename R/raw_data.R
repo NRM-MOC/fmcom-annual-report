@@ -185,7 +185,18 @@ esbase_species <- c(
 
 # The extract (Excel or semicolon-separated CSV) with standard column names
 read_esbase_raw <- function(cfg) {
+  if (is.null(cfg$raw_data$esbase_file)) {
+    stop("No esbase file in the config: add `esbase_file:` under `raw_data:` in config/",
+         cfg$programme, ".yml (e.g. esbase_file: ", cfg$programme, "/esbase/<file name>.xlsx).",
+         call. = FALSE)
+  }
   file <- data_dir(cfg$raw_data$esbase_file)
+  if (!file.exists(file)) {
+    stop("esbase file not found: ", file, ". Check `esbase_file:` in config/", cfg$programme,
+         ".yml and FMCOM_DATA_DIR in .Renviron (currently: ",
+         Sys.getenv("FMCOM_DATA_DIR", unset = "not set, so data/ in the project"), ").",
+         call. = FALSE)
+  }
   raw <- if (grepl("\\.csv$", file, ignore.case = TRUE)) {
     readr::read_csv2(file, guess_max = 100000, show_col_types = FALSE)
   } else {
