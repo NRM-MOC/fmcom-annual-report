@@ -20,9 +20,10 @@ appendix_header_values <- function(cfg) {
     citation = paste0(r$citation$authors, " (", r$citation$year, "). ", title, ", ",
                       r$citation$publisher, "."),
     authors = paste0("- ", unlist(r$authors), collapse = "\n"),
-    preamble = here::here("03_report", "preamble-latex.tex"),
-    bibliography = here::here("03_report", "references.bib"),
-    text_file = here::here(r$text_file),
+    # Copied next to the .Rmd by generate_appendix.R (report_files)
+    preamble = basename(report_files["preamble"]),
+    bibliography = basename(report_files["bibliography"]),
+    text_file = rmd_path(here::here(r$text_file)),
     biota = r$biota,
     spring_note = if (length(spring) > 0) {
       paste0("For sampling sites with data collection in both spring and autumn (",
@@ -31,6 +32,17 @@ appendix_header_values <- function(cfg) {
     } else ""
   )
 }
+
+# Files pandoc reads (LaTeX preamble, references). They are copied into the
+# report folder and named without a path: pandoc can't open full paths on a
+# network drive (\\server\share), but finds files next to the .Rmd.
+report_files <- c(preamble = "03_report/preamble-latex.tex",
+                  bibliography = "03_report/references.bib")
+
+# Paths written into the .Rmd's R code (the yearly text file, read by knitr)
+# with forward slashes: a backslash there is an escape character, so a
+# network path like \\server\share would become \server\share
+rmd_path <- function(path) gsub("\\", "/", path, fixed = TRUE)
 
 # One part per species group with results for this substance. `sections`
 # (config report: sections:) gives each part's template and species codes.

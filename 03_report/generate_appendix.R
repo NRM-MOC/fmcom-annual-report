@@ -9,10 +9,13 @@
 #
 # Output in output/<programme>_<year>/report/:
 #   appendix_<programme>_<year>.Rmd / .tex / .pdf
+#   preamble-latex.tex, references.bib (copies used by pandoc)
 #   run_info_step3.yml
 
 contents <- read.csv(file.path(harsat_dir(cfg), "contents_for_appendix.csv"))
 report_dir <- output_dir(cfg, "report")
+# LaTeX preamble and references next to the .Rmd, where pandoc finds them
+file.copy(here::here(report_files), report_dir, overwrite = TRUE)
 
 # Settings read by the templates
 options(
