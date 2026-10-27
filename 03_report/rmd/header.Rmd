@@ -48,9 +48,10 @@ tabcap <- "Parameters: n year all: number of years in time series; n year fit: n
 ### Citation
 Please cite as: {{citation}}
 
+The code used to produce this report is available at <https://github.com/NRM-MOC/fmcom-annual-report>.
+
 ```{r, child = "{{text_file}}"}
 ```
-
 
 #	Statistical treatment
 
