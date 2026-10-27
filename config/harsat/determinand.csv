@@ -48,7 +48,7 @@ PFHXA,PFHXA,O-FL,Organofluorines,Organofluorines,Organofluorines,TRUE,FALSE,FALS
 LPFBS,LPFBS,O-FL,Organofluorines,Organofluorines,Organofluorines,TRUE,FALSE,FALSE,ug/kg,mg/kg,ng/l,LNMEA~LIPIDWT%~DRYWT%,,,0.08708,0.26864,,,,,lognormal,low
 PFHXS,PFHXS,O-FL,Organofluorines,Organofluorines,Organofluorines,TRUE,FALSE,FALSE,ug/kg,mg/kg,ng/l,LNMEA~LIPIDWT%~DRYWT%,,,0.17564,0.27788,,,,,lognormal,low
 PFDS,PFDS,O-FL,Organofluorines,Organofluorines,Organofluorines,TRUE,FALSE,FALSE,ug/kg,mg/kg,ng/l,LNMEA~LIPIDWT%~DRYWT%,,,0.14365,0.27788,,,,,lognormal,low
-PFAS24,PFAS24,O-FL,Organofluorines,Organofluorines,Organofluorines,TRUE,FALSE,FALSE,ug/kg,mg/kg,ng/l,LNMEA~LIPIDWT%~DRYWT%,,,0.13073,0.25461,,,,,lognormal,low
+PFAS25,PFAS25,O-FL,Organofluorines,Organofluorines,Organofluorines,TRUE,FALSE,FALSE,ug/kg,mg/kg,ng/l,LNMEA~LIPIDWT%~DRYWT%,,,0.13073,0.25461,,,,,lognormal,low
 CB77,CB77,OC-CB,Chlorobiphenyls,Chlorobiphenyls,Chlorobiphenyls,TRUE,FALSE,FALSE,ug/kg,mg/kg,ng/l,LNMEA~LIPIDWT%~DRYWT%,,,0.07667,0.25998,,,,,lognormal,low
 CB81,CB81,OC-CB,Chlorobiphenyls,Chlorobiphenyls,Chlorobiphenyls,TRUE,FALSE,FALSE,ug/kg,mg/kg,ng/l,LNMEA~LIPIDWT%~DRYWT%,,,0.07667,0.40721,,,,,lognormal,low
 CB126,CB126,OC-CB,Chlorobiphenyls,Chlorobiphenyls,Chlorobiphenyls,TRUE,FALSE,FALSE,ug/kg,mg/kg,ng/l,LNMEA~LIPIDWT%~DRYWT%,,,0.07667,0.26,,,,,lognormal,low

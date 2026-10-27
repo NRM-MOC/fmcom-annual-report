@@ -20,8 +20,8 @@ TEQDLP:
             CB157: 0.00003, CB167: 0.00003, CB189: 0.00003}
 TEQ: {combine: [TEQDLP, TEQDF]}
 
-# PFAS-24 (PFOA equivalents): the seven PFAS that make up >99% of the sum
-PFAS24:
+# PFAS-25 (PFOA equivalents): the seven PFAS that make up >99% of the sum
+PFAS25:
   weights: {PFOS: 2, PFOA: 1, PFNA: 10, PFDA: 7, PFUNDA: 4, PFDODA: 3, PFTRDA: 1.35}
 
 # BDE-28 is not included: it has not been analysed most years, and HARSAT
