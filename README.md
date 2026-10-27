@@ -6,6 +6,13 @@ Working on the report is also how the new year's data is quality-checked before 
 
 > **Status:** marine and freshwater both run end to end. Marine was validated against the scripts used for the 2025 report; freshwater has been tested with the 2024 data.
 
+## Published reports
+
+The most recent reports, in DiVA:
+
+- [Marine Biota, data through 2024](https://urn.kb.se/resolve?urn=urn:nbn:se:nrm:diva-6102) (2025)
+- [Freshwater Biota, data through 2024](https://urn.kb.se/resolve?urn=urn:nbn:se:nrm:diva-6334) (2026)
+
 ## How it works
 
 ```

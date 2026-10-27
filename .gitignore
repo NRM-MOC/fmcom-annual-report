@@ -50,6 +50,9 @@ rsconnect/
 /data/
 /output/
 
+# Scripts in development, not yet part of the pipeline
+/dev/
+
 # HARSAT output (written next to wherever HARSAT runs)
 oddities/
 
