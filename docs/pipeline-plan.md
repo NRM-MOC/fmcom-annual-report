@@ -40,7 +40,8 @@ The MCOM2025 and FCOM2026 scripts were kept in the repository as a baseline whil
 │   ├── lookups/                  # names and order used in the report (determinands, species)
 │   ├── harsat/                   # HARSAT information files (determinand, species, thresholds),
 │   │                             #   stations per programme, sums, automatic convergence fixes
-│   └── report/                   # threshold tables shown in the report
+│   ├── report/                   # threshold tables shown in the report
+│   └── submission/               # SGU's blank template; log of submissions per programme
 ├── R/                            # shared functions (config, step 1, QC, HARSAT, figures, report)
 ├── 01_raw_data/
 │   └── prepare_new_year.R        # lab files + esbase -> new year's data in fmcom format, QC
@@ -55,6 +56,8 @@ The MCOM2025 and FCOM2026 scripts were kept in the repository as a baseline whil
 │   ├── text/                     # year-specific report text per programme
 │   ├── preamble-latex.tex
 │   └── references.bib
+├── 04_submission/
+│   └── prepare_submission.R      # lab files + esbase -> SGU's template, filled; QC; changes since last version
 ├── tools/                        # occasional upkeep of the HARSAT information files
 ├── docs/                         # user guide, this document
 ├── data/     (gitignored)        # lab files, esbase extracts
@@ -66,17 +69,18 @@ The MCOM2025 and FCOM2026 scripts were kept in the repository as a baseline whil
 
 The data is reported to the [National Contaminants database](https://www.sgu.se/produkter-och-tjanster/datavardskapen-grundvatten-och-miljogifter/rapporterad-data-till-datavardskap-for-miljogifter/) (Datavärdskap för miljögifter), hosted at the Geological Survey of Sweden (SGU). The database is only available in Swedish, which makes it hard to use for researchers who don't read Swedish. Codes and names from the database keep "SGU" in their names in fmcom and MoCiS2 (e.g. `station_code_SGU`, `contaminant_code_SGU`, `contaminants_SGU_NRM.csv`).
 
-Nothing in this pipeline goes to the national database. The cycle is:
+The cycle is:
 
 1. **Before the report:** last year's data, downloaded from the national database after its QC, is added to fmcom (in the fmcom repo).
-2. **The report (this pipeline):** the new year's data is read from the lab files, QC'd, temporarily attached to fmcom, and run through HARSAT, tables, figures and the report.
-3. **After the report:** the QC'd new-year data is converted and submitted to the national database through a separate pipeline, which adds another QC layer.
+2. **The report (steps 1–3):** the new year's data is read from the lab files, QC'd, temporarily attached to fmcom, and run through HARSAT, tables, figures and the report.
+3. **After the report (step 4):** the QC'd new-year data is converted to SGU's template and submitted to the national database, which adds another QC layer.
 4. **Next year:** that data is downloaded from the national database and added to fmcom, and the cycle starts again.
 
-The pipeline is not one continuous run. There are **two QC checkpoints**, and `run.R` makes both explicit:
+The pipeline is not one continuous run. There are **three QC checkpoints**, and `run.R` makes them explicit:
 
 1. **After step 1 (new year's data):** review `qc_step1.csv` (scripted checks, see below), contact labs, and correct before continuing to step 2.
 2. **After step 3 (the finished report):** look through the report for oddities and contact labs where needed. After correcting, re-run all three steps.
+3. **During step 4 (the submission):** errors that slipped through are often found here. Corrections go into the lab files (new file versions, listed in the config), so a re-run of the report also gets them.
 
 The visual review of the report is still the main check of the concentrations themselves. A screening of the new year's values against earlier years is being developed (see Open questions and later additions).
 
@@ -154,7 +158,18 @@ Step 1 mirrors fmcom's `data-raw/adding_next_year_fmcom.R`, which converts the n
 - **As in fmcom:** bismuth (`Bi`) is kept; PFAS in muscle is removed (only liver is used); pooled samples get sex "Mixed"; eggs get age 0; fat % and dry weight % are attached per lab sample (`sample_ID`); the metals file's `TPRC` is dropped.
 - **Samples without esbase data** (no date) get their year from the config and are listed in the QC output.
 - **Identical rows from a lab file** are removed and counted in the QC output (in 2025, the PFAS file listed FHXSA twice in its accreditation list, which made MoCiS2 repeat every FHXSA row).
-- **QC (`qc_step1.csv`)** has 21 scripted checks, among them: unlisted lab files, MoCiS2 warnings, codes and stations not in the master tables, missing biological data (date, weight, age, sex), and whether each lab station matches one esbase location, which catches wrong specimen IDs in a lab file.
+- **QC (`qc_step1.csv`)** has 22 scripted checks, among them: unlisted lab files, MoCiS2 warnings, codes and stations not in the master tables, missing biological data (date, weight, age, sex), and whether each lab station matches one esbase location, which catches wrong specimen IDs in a lab file.
+- **The lab files' "general info":** MoCiS2 takes the lab, executing lab, preparation, method and instrument for all rows of a file from the drop-down column of the "general info" sheet. The column to the right is for comments, e.g. when the right value is not in the drop-down list (in 2025, the new isotope lab Agroisolab was only in the comment). Steps 1 and 4 list every field with a comment that differs from the value, so it is seen without anyone having to remember it. The correction belongs in the lab file, not in the pipeline.
+
+### Step 4: the submission to the national database
+
+Until 2025, the submission was a separate script in its own folder, which read the same lab files again; its three output sheets were copied into SGU's template by hand. It is now step 4 of this pipeline (decided 2026-10-28), because it builds on exactly the same data as the report: corrections found in either the report QC or the submission QC then reach both.
+
+- **Same data as step 1:** the lab files under `raw_data:`, the method rules, and the esbase reader. Only the esbase extract can differ (`submission: esbase_file:`), because a later extract often has the mussel and bird data that wasn't available for the report. The report keeps the extract it was made from, so it stays reproducible.
+- **MoCiS2 does the conversion** (`moc_join_SGU()`, `moc_write_SGU()`), as before; step 4 writes the result into SGU's blank template (`config/submission/`), from row 6 and column B, keeping SGU's layout. BESTALLARE comes from the config, with the report title as RAPPORTNAMN. The template is replaced when SGU publishes a new version; its version is recorded in `run_info_step4.yml`.
+- **Versions are set by hand** (`submission: version:`). Re-runs during the submission QC replace the version's files, and don't count as new versions. Once SGU's receipt (`.msg`) is saved in the version folder, the version is locked, and a resubmission needs a higher version.
+- **Submitted files stay in the data folder** (`<programme>/submissions/<year>/v<n>/`), not in git, since they contain unpublished data. Each version folder holds the uploaded file, the receipt, the QC, the run info, and the changes since the last submitted version.
+- **The log** (`config/submission/submissions_<programme>.csv`) is in git, filled in by hand after each upload: year, version, date, Leverans-ID, type and a comment. It holds no measurements. Step 4 checks that every version with a receipt is in the log.
 
 ## Open questions and later additions
 
@@ -173,6 +188,10 @@ Step 1 mirrors fmcom's `data-raw/adding_next_year_fmcom.R`, which converts the n
 - **QC of the new year against earlier years:** today's step 1 QC checks structure, and the visual QC looks at concentrations in the report figures; neither catches problems in the uncertainty, LOQ and LOD values. A screening script is in development (`dev/screen_new_year.R`): for each series it compares the new year's level with the trend of the previous 10 years, and checks changes in the share below LOQ, the LOQ/LOD levels, the relative uncertainty, fat and dry weight %, and series that are missing. It may become part of the QC after step 1.
 - **PFAS (SLU, from 2020):** the lab files show one fixed LOD and LOQ per substance and year, varying by factors of 10–100 between years, with the largest problems in 2020–2022 (instrument problems and staff changes at the lab). Several PFAS that SU detected until 2019 are mostly below the limit since 2020, even when the LOQ is below the earlier typical concentrations. To decide: how to treat 2020–2022 in deeper analyses of the PFAS time series.
 - **Data errors reported for correction in the national database:** the Gipsjön perch pool ID in the SU 2024 freshwater files, and linear PFOS reported as <0.006 in two Fladen herring liver samples (2022).
+- **Step 4, to settle at the first real submission (January 2027):**
+  - *Executing lab for dry weight in the SI file.* The template has one executing lab per file, so dry weight (TPRCI, MTPRCI), weighed at ACES, gets the isotope lab. The old marine script set it to `EJ_REL` by hand; the old freshwater script didn't, so the freshwater 2024 data at SGU has UC Davis for dry weight. Probably needs a fixed rule in step 4, decided once the rest of the SI file is updated.
+  - *The SI file's general info for 2025:* SGU lab code for Agroisolab (new lab, code not yet requested), and the analysis method, which still says `UCD_SIA`.
+  - *Test the whole step:* upload, receipt, log row, and a resubmission with the changes file.
 - **Open follow-ups from the 2025 run:**
   - Biological data is missing for 2 Kinnbäcksfjärden herring pools (`B2026/...`).
   - Mussels and guillemot eggs have no catch dates in the esbase extract.

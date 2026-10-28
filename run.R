@@ -7,8 +7,8 @@
 #
 # Yearly cycle: before starting, fmcom must already contain last year's data
 # (downloaded from SGU). This pipeline temporarily adds the new year's data
-# from the lab files. Nothing here goes to SGU; the QC'd new-year data is
-# submitted to SGU afterwards through a separate pipeline.
+# from the lab files (steps 1-3), and after the report builds the file that
+# submits the QC'd new-year data to SGU (step 4).
 #
 # Settings live in config/<programme>.yml. Local settings (data location,
 # HARSAT development copy) live in .Renviron; see .Renviron.example.
@@ -44,3 +44,9 @@ source(here::here("03_report", "generate_appendix.R"))
 # Look through the report for oddities (trends, outliers, missing series).
 # If something is wrong in the data, contact the lab, add the correction to
 # config/corrections/, and re-run all three steps from step 1.
+
+## Step 4: submission to the national database (SGU) ----
+# Set `submission: version:` and `esbase_file:` in the config first. Review
+# qc_step4.csv before uploading; after uploading, save the receipt in the
+# version folder and add a row to config/submission/submissions_<programme>.csv
+source(here::here("04_submission", "prepare_submission.R"))

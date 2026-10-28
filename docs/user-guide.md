@@ -79,6 +79,7 @@ Open `run.R`, set `programme <- "marine"` (or `"freshwater"`), and run it sectio
 | 2b HARSAT | **~4.5 h** | **~2.5 h** | `harsat/assessments/`, `harsat/convergence_log.csv`, `harsat/oddities/` |
 | 2c Tables and figures | ~20 min | ~15 min | `harsat/biota_summary.csv`, `harsat/figs/`, `harsat/tables/`, `harsat/contents_for_appendix.csv` |
 | 3 Report | ~2–6 min | ~1 min | `report/appendix_<programme>_<year>.pdf` |
+| 4 Submission to SGU | ~30 s | ~20 s | in the data folder, see [Submitting to the national database](#submitting-to-the-national-database-step-4) |
 
 Run times are from a 14-core laptop; with fewer cores, or with the project on a network drive, step 2b takes longer.
 
@@ -86,8 +87,9 @@ Each step also writes `run_info_step<n>.yml`: code version, fmcom and HARSAT ver
 
 ### QC checkpoints
 
-1. **After step 1:** review `qc_step1.csv`, contact labs if needed, fix and re-run step 1. Among other things, it checks that every lab specimen has biological data in esbase, and that each lab station matches one esbase location (which catches wrong specimen IDs in a lab file).
+1. **After step 1:** review `qc_step1.csv`, contact labs if needed, fix and re-run step 1. Among other things, it checks that every lab specimen has biological data in esbase, that each lab station matches one esbase location (which catches wrong specimen IDs in a lab file), and lists comments in the lab files' "general info" sheet (e.g. a new lab that isn't in the drop-down list yet).
 2. **After step 3:** look through the report for oddities; if data must be corrected, re-run all steps from step 1.
+3. **During step 4:** review `qc_step4.csv` before uploading; see [Submitting to the national database](#submitting-to-the-national-database-step-4).
 
 ### Running some groups only
 
@@ -120,6 +122,7 @@ HARSAT leaves some years out of the trend fit: years before a six-year block wit
    - `year:` the last year of data
    - `raw_data:` the exact lab file names under `lab_files:` (they change every year), and the esbase file.
    - `report:` authors, and the citation year
+   - `submission:` `version: 1` again, and the esbase extract for the submission
 3. **The data folder:** put the lab files in `<data folder>/<programme>/lab_files/` and the esbase extract in `<data folder>/<programme>/esbase/`.
 4. **`03_report/text/<programme>.Rmd`**: front page photo, acknowledgements (labs, project leaders, chemists), introduction and method updates. The file starts with a checklist.
 5. **`config/report/thresholds_<programme>.csv`** if thresholds have changed.
@@ -177,6 +180,37 @@ GitHub keeps the code; the shared drive keeps the results. `output/` is not in g
 **Re-running the same year overwrites `output/<programme>_<year>/`.** Copy the folder elsewhere first if you re-run after the report is published.
 
 To look at an earlier version of the code later: `git checkout marine-2025`, or download it from the tag on GitHub.
+
+## Submitting to the national database (step 4)
+
+After the report, step 4 builds the file that submits the new year's data to the national database at SGU. It reads the same lab files as step 1 and fills SGU's template (`config/submission/`).
+
+**Before running**, in `config/<programme>.yml` under `submission:`:
+
+- `version:` 1 for the first submission of the year. Raise it only to resubmit something already uploaded.
+- `esbase_file:` the esbase extract for the submission. It's often a later extract than the report's, with the mussel and bird data; it must have the same format.
+- `message:` optional lines for SGU's MEDDELANDE sheet, e.g. why a version replaces an earlier one.
+
+**Output** goes to `<data folder>/<programme>/submissions/<year>/v<version>/`:
+
+| File | Contents |
+|---|---|
+| `<template name>_<programme>_<year>_v<n>.xlsx` | the file to upload |
+| `qc_step4.csv` | checks: lab specimens without biological data in the submission's esbase extract, comments in the lab files' "general info", template columns that aren't filled, and versions with a receipt missing from the log |
+| `changes_since_v<n>.csv` | from version 2: rows added, removed or changed since the last submitted version |
+| `run_info_step4.yml` | code version, lab files, esbase file and template version used |
+
+**The work flow:**
+
+1. Run step 4 and review `qc_step4.csv` (and `changes_since_v<n>.csv` for a resubmission).
+2. If something is wrong, correct it in the lab file (a new file version, listed under `raw_data: lab_files:`) and re-run. Re-runs replace the version's files, so they don't count as new versions, and a re-run of the report also gets the correction.
+3. Upload the file to SGU.
+4. Save SGU's receipt (the e-mail, as `.msg`) in the version folder. From then on that version is locked: step 4 stops if you run it again with the same version.
+5. Add a row to `config/submission/submissions_<programme>.csv` (year, version, date, Leverans-ID, type, file name, comment) and commit it.
+
+**To resubmit** after errors are found: raise `version:` (e.g. to 2), correct the lab files and run step 4. `changes_since_v1.csv` then shows everything that differs from what SGU has. Upload it as a replacement of the earlier delivery; SGU needs the Leverans-ID from the log.
+
+**A new SGU template:** replace the file in `config/submission/` (only one template may be there). If SGU changes column names, MoCiS2 may need updating; `qc_step4.csv` lists the template columns MoCiS2 doesn't fill.
 
 ## Adding a new contaminant
 

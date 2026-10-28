@@ -3,7 +3,8 @@
 # Writes run_info_<step>.yml to the output folder: which code, data and
 # package versions produced the output. Needed to reproduce a published report.
 
-write_run_info <- function(cfg, step, harsat = NULL, extra = NULL) {
+# `dir`: where to write it (step 4 writes into the submission's version folder)
+write_run_info <- function(cfg, step, harsat = NULL, extra = NULL, dir = output_dir(cfg)) {
   commit <- tryCatch(
     system2("git", c("-C", shQuote(here::here()), "rev-parse", "--short", "HEAD"), stdout = TRUE),
     error = function(e) NA_character_, warning = function(w) NA_character_
@@ -24,7 +25,7 @@ write_run_info <- function(cfg, step, harsat = NULL, extra = NULL) {
     R_version   = R.version.string
   )
   info <- c(info, extra)
-  path <- file.path(output_dir(cfg), paste0("run_info_", step, ".yml"))
+  path <- file.path(dir, paste0("run_info_", step, ".yml"))
   yaml::write_yaml(info, path)
   invisible(path)
 }

@@ -25,9 +25,11 @@ lab files + esbase ──► Step 1 ──► new year's data in fmcom format + 
                        Step 2c ──► tables, time series plots, maps
                            │
                        Step 3  ──► report appendix (PDF)                 ──► QC CHECKPOINT 2
+                           │
+                       Step 4  ──► submission file for the National Contaminants database + QC
 ```
 
-The pipeline adds the new year *temporarily* to fmcom, from the lab files. The quality-checked data is submitted to the National Contaminants database through a separate pipeline, and is added to fmcom the following year. The QC checkpoints are where the new year's data and the finished report are reviewed, and labs contacted if something looks wrong.
+The pipeline adds the new year *temporarily* to fmcom, from the lab files. After the report, step 4 builds the file that submits the quality-checked data to the National Contaminants database; from there it is added to fmcom the following year. The QC checkpoints are where the new year's data and the finished report are reviewed, and labs contacted if something looks wrong.
 
 Both programmes, marine and freshwater, use the same code; each has its own settings file in `config/`.
 
@@ -36,9 +38,9 @@ Both programmes, marine and freshwater, use the same code; each has its own sett
 | Folder | Contents |
 |---|---|
 | `run.R` | Entry point: runs the steps in order |
-| `config/` | All settings. `marine.yml` / `freshwater.yml` per programme; `harsat/` HARSAT information files, stations, sums and convergence fixes; `lookups/` names and order used in the report; `report/` threshold tables |
+| `config/` | All settings. `marine.yml` / `freshwater.yml` per programme; `harsat/` HARSAT information files, stations, sums and convergence fixes; `lookups/` names and order used in the report; `report/` threshold tables; `submission/` SGU's template and the log of submissions |
 | `R/` | Functions used by the steps |
-| `01_raw_data/`, `02_harsat/`, `03_report/` | The step scripts; `03_report/rmd/` report templates, `03_report/text/` year-specific report text |
+| `01_raw_data/`, `02_harsat/`, `03_report/`, `04_submission/` | The step scripts; `03_report/rmd/` report templates, `03_report/text/` year-specific report text |
 | `tools/` | Occasional scripts: generic uncertainties and biological averages for the HARSAT information files |
 | `data/` | Input data: lab files, esbase (not in git) |
 | `output/` | Everything the pipeline produces, per programme and year, e.g. `output/marine_2025/` (not in git) |

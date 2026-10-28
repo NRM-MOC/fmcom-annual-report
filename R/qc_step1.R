@@ -52,6 +52,7 @@ qc_step1 <- function(cfg, lab, bio, new_year, master) {
     qc_item("Lab files in the folder but not listed in the config", lab$unlisted_files),
     qc_item("MoCiS2 warnings when reading lab files",
             paste0(lab$messages$lab_file, ": ", lab$messages$message, recycle0 = TRUE)),
+    qc_general_info(lab_general_info(cfg)),
     qc_item("Identical rows from a lab file (removed)",
             paste0(lab$duplicates$lab_file, ": ", lab$duplicates$n, " rows", recycle0 = TRUE)),
     qc_item("Stations not in the fmcom master table (SGU ID)",
@@ -96,6 +97,16 @@ qc_step1 <- function(cfg, lab, bio, new_year, master) {
     qc_item("Lab samples with more than one fat or dry weight % (mean used)",
             paste(fraction_duplicates$RAPPORT_KOD_LABB, fraction_duplicates$NRM_PARAMETERKOD))
   )
+}
+
+# A comment next to a "general info" value often means the drop-down value
+# is not the right one (e.g. a new lab not yet in the list)
+qc_general_info <- function(general_info) {
+  flagged <- general_info |>
+    dplyr::filter(!is.na(comment), is.na(value) | trimws(comment) != trimws(value))
+  qc_item("Lab file 'general info' fields with a comment (check that the value is right)",
+          paste0(flagged$lab_file, " | ", flagged$field, ": ", flagged$value,
+                 " (comment: ", flagged$comment, ")", recycle0 = TRUE))
 }
 
 qc_item <- function(check, items) {

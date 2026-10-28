@@ -83,3 +83,22 @@ report:
     - {template: FISHsection_freshwater.Rmd, species: [SALV, ESOX]}
   # No maps for these substances (no data, or mostly below LOQ)
   exclude_maps: [AHCH, BHCH, LINDAN, CB28, PFHXA, PFHPA, LPFBS, LPFHXS, BPFHXS, PFHXS, LPFDS, BPFDS, PFDS]
+
+# Step 4: submission of the new year's data to the national database (SGU).
+# Uses the lab files under raw_data:, and SGU's template in config/submission/.
+submission:
+  # Set by hand: 1 for the first submission; raise it only to resubmit after
+  # an upload. Re-runs replace the version's files until its receipt is saved.
+  version: 1
+  # Can be a later extract than the report's. Same format as
+  # raw_data: esbase_file:
+  esbase_file: freshwater/esbase/Biologdata_fcom24_uppdaterade_aldrar.xlsx
+  # BESTALLARE sheet; RAPPORTNAMN is taken from report: title:
+  bestallare:
+    BEST_ORG: HaV
+    BESTALLD_UNDERSOKNING: "Nationell övervakning av miljögifter i limnisk biota"
+    UTFOR_ORG: HaV
+    ORG_TYP: MYNDIG
+  # Optional message to the data host (MEDDELANDE sheet), one line per row
+  # (max 100 characters), e.g. why a version replaces an earlier one
+  message: []

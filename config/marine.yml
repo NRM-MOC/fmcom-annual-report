@@ -89,3 +89,22 @@ report:
     - {template: EGGsection.Rmd, species: [SIGR, HAEM, STER]}
   # No maps for these substances (no data, or mostly below LOQ)
   exclude_maps: [CR, AHCH, LINDAN, PFHXA, PFHPA, LPFBS, LPFDS, PFDS]
+
+# Step 4: submission of the new year's data to the national database (SGU).
+# Uses the lab files under raw_data:, and SGU's template in config/submission/.
+submission:
+  # Set by hand: 1 for the first submission; raise it only to resubmit after
+  # an upload. Re-runs replace the version's files until its receipt is saved.
+  version: 1
+  # Often a later extract than the report's, with mussel and bird data. Same
+  # format as raw_data: esbase_file:
+  esbase_file: marine/esbase/Marina 2025 fiskar.xlsx
+  # BESTALLARE sheet; RAPPORTNAMN is taken from report: title:
+  bestallare:
+    BEST_ORG: HaV
+    BESTALLD_UNDERSOKNING: "Miljögifter i marin biota - insamling, provberedning, utvärdering och programkoordinering"
+    UTFOR_ORG: HaV
+    ORG_TYP: MYNDIG
+  # Optional message to the data host (MEDDELANDE sheet), one line per row
+  # (max 100 characters), e.g. why a version replaces an earlier one
+  message: []

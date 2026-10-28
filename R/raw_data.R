@@ -133,6 +133,23 @@ read_lab_files <- function(cfg) {
        unlisted_files = setdiff(present, listed))
 }
 
+## Lab files' "general info" ----
+# MoCiS2 takes the lab, executing lab, preparation, method etc. for all rows
+# of a file from the drop-down column of its "general info" sheet (rows 6-12).
+# The column to the right is for comments, e.g. when the right value is not
+# in the drop-down list, so both are read for the QC.
+lab_general_info <- function(cfg) {
+  dir <- data_dir(cfg$raw_data$lab_files_dir)
+  purrr::map(cfg$raw_data$lab_files, function(entry) {
+    info <- readxl::read_excel(file.path(dir, entry$file), sheet = "general info",
+                               range = "A6:C12", col_names = FALSE, col_types = "text",
+                               .name_repair = "minimal")
+    tibble::tibble(lab_file = entry$file, field = info[[1]], value = info[[2]],
+                   comment = if (ncol(info) >= 3) info[[3]] else NA_character_)
+  }) |>
+    dplyr::bind_rows()
+}
+
 ## Method rules ----
 # Corrections to the analytical method that apply every year, e.g. egg content
 # needs a different extraction method than the one reported for all tissues.
@@ -183,14 +200,15 @@ esbase_species <- c(
   "Strandskata" = "Haematopus ostralegus"
 )
 
-# The extract (Excel or semicolon-separated CSV) with standard column names
-read_esbase_raw <- function(cfg) {
-  if (is.null(cfg$raw_data$esbase_file)) {
-    stop("No esbase file in the config: add `esbase_file:` under `raw_data:` in config/",
-         cfg$programme, ".yml (e.g. esbase_file: ", cfg$programme, "/esbase/<file name>.xlsx).",
-         call. = FALSE)
+# The extract (Excel or semicolon-separated CSV) with standard column names.
+# `file` defaults to the report's extract; step 4 passes the submission's.
+read_esbase_raw <- function(cfg, file = cfg$raw_data$esbase_file) {
+  if (is.null(file)) {
+    stop("No esbase file in the config: add `esbase_file:` under `raw_data:` (step 1) or ",
+         "`submission:` (step 4) in config/", cfg$programme, ".yml (e.g. esbase_file: ",
+         cfg$programme, "/esbase/<file name>.xlsx).", call. = FALSE)
   }
-  file <- data_dir(cfg$raw_data$esbase_file)
+  file <- data_dir(file)
   if (!file.exists(file)) {
     stop("esbase file not found: ", file, ". Check `esbase_file:` in config/", cfg$programme,
          ".yml and FMCOM_DATA_DIR in .Renviron (currently: ",
@@ -225,9 +243,9 @@ read_esbase_raw <- function(cfg) {
 
 # As in the SGU submission script. Sex uses SGU codes, which
 # MoCiS2::moc_join_SGU() needs to pool sexes correctly.
-read_esbase <- function(cfg) {
+read_esbase <- function(cfg, file = cfg$raw_data$esbase_file) {
   birds <- c("Uria aalge", "Sterna hirundo", "Haematopus ostralegus")
-  read_esbase_raw(cfg) |>
+  read_esbase_raw(cfg, file) |>
     dplyr::transmute(
       PROV_KOD_ORIGINAL = ACCNR,
       PROVTAG_DAT = as.Date(DATE),
