@@ -10,8 +10,10 @@
 # files. Once the SGU receipt (.msg) is saved in the version folder, the
 # version is locked.
 #
-# Output in <data folder>/<programme>/submissions/<year>/v<version>/:
-#   <template name>_<programme>_<year>_v<version>.xlsx   the file to upload
+# Output in <SGU folder>/<folder>/<folder> <year>/v<version>/, e.g.
+# Marina/Marina 2025/v1/ (FMCOM_SUBMISSION_DIR in .Renviron, and
+# `submission: folder:` in the config):
+#   SGU_<programme>_<year>_v<version>.xlsx   the file to upload
 #   qc_step4.csv                 QC checks; review before uploading
 #   changes_since_v<n>.csv       rows added, removed or changed since the
 #                                last submitted version (from version 2)
@@ -26,10 +28,10 @@ lab <- read_lab_files(cfg)
 bio <- read_esbase(cfg, file = cfg$submission$esbase_file)
 sgu <- sgu_sheets(cfg, lab$data, bio, template)
 
-submission_file <- file.path(version_dir, submission_file_name(cfg, template))
+submission_file <- file.path(version_dir, submission_file_name(cfg))
 write_submission(cfg, sgu$data, template, submission_file)
 
-previous <- last_submitted(cfg, template)
+previous <- last_submitted(cfg)
 if (!is.null(previous)) {
   changes <- submission_changes(read_submission(previous$file), sgu$data)
   readr::write_csv(changes, file.path(version_dir, paste0("changes_since_v", previous$version, ".csv")),

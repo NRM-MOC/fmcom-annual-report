@@ -5,6 +5,10 @@
 # Where the data folder is. Leave out to use data/ inside the project.
 # FMCOM_DATA_DIR=X:/path/to/shared/data
 
+# Where step 4 writes the submission files: the folder that contains Marina/
+# and Limniska/. Leave out to use output/submissions/ inside the project.
+# FMCOM_SUBMISSION_DIR="X:/path/to/SGU/Data SGU"
+
 # Local HARSAT checkout to load with devtools::load_all(). Leave out to use
 # the installed harsat package.
 # HARSAT_DEV_PATH=C:/Users/<you>/github/HARSAT

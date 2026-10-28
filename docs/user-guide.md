@@ -46,10 +46,12 @@ Settings that differ per computer go in a file called `.Renviron` in the project
 
 ```
 FMCOM_DATA_DIR="X:/path/to/data"
+FMCOM_SUBMISSION_DIR="X:/path/to/SGU/Data SGU"
 HARSAT_DEV_PATH=C:/Users/<you>/github/HARSAT
 ```
 
 - `FMCOM_DATA_DIR`: the data folder, the one that **contains** `marine/` and `freshwater/` (with `lab_files/` and `esbase/` in each). Leave it out to use `data/` in the project.
+- `FMCOM_SUBMISSION_DIR`: where step 4 writes the submission files, the folder that **contains** `Marina/` and `Limniska/`. Leave it out to use `output/submissions/` in the project (e.g. for testing).
 - `HARSAT_DEV_PATH`: a local HARSAT checkout, loaded with `pkgload::load_all()`. Leave it out to use the installed harsat package. The pipeline uses HARSAT in this order: a copy already loaded in the session (e.g. with `devtools::load_all()`), then `HARSAT_DEV_PATH`, then the installed package. Check that the checkout is on the intended commit (`git log -1` in the HARSAT folder); each run records the version and commit it used in `run_info_step2.yml`.
 
 Common problems:
@@ -191,11 +193,11 @@ After the report, step 4 builds the file that submits the new year's data to the
 - `esbase_file:` the esbase extract for the submission. It's often a later extract than the report's, with the mussel and bird data; it must have the same format.
 - `message:` optional lines for SGU's MEDDELANDE sheet, e.g. why a version replaces an earlier one.
 
-**Output** goes to `<data folder>/<programme>/submissions/<year>/v<version>/`:
+**Output** goes to the SGU folder (`FMCOM_SUBMISSION_DIR`), in `<folder>/<folder> <year>/v<version>/`, e.g. `Marina/Marina 2025/v1/` (`submission: folder:` in the config):
 
 | File | Contents |
 |---|---|
-| `<template name>_<programme>_<year>_v<n>.xlsx` | the file to upload |
+| `SGU_<programme>_<year>_v<n>.xlsx` | the file to upload |
 | `qc_step4.csv` | checks: lab specimens without biological data in the submission's esbase extract, comments in the lab files' "general info", template columns that aren't filled, and versions with a receipt missing from the log |
 | `changes_since_v<n>.csv` | from version 2: rows added, removed or changed since the last submitted version |
 | `run_info_step4.yml` | code version, lab files, esbase file and template version used |

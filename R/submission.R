@@ -6,10 +6,12 @@
 # SGU's format; the result is written into SGU's blank template in
 # config/submission/.
 #
-# Each submitted version has its own folder in the data folder:
-# <data folder>/<programme>/submissions/<year>/v<n>/. The version is set by
-# hand (`submission: version:`). Re-runs replace the folder's contents until
-# the SGU receipt (.msg) is saved there; after that the folder is locked.
+# Each submitted version has its own folder in the SGU folder (set by
+# FMCOM_SUBMISSION_DIR in .Renviron), following its existing layout:
+# <SGU folder>/<folder>/<folder> <year>/v<n>/, e.g. Marina/Marina 2025/v1/
+# (`submission: folder:`). The version is set by hand
+# (`submission: version:`). Re-runs replace the folder's contents until the
+# SGU receipt (.msg) is saved there; after that the folder is locked.
 
 submission_sheets_sgu <- c("PROVMETADATA", "PROVDATA_BIOTA", "DATA_MATVARDE")
 
@@ -41,13 +43,25 @@ template_version <- function(template) {
   if (is.na(row)) NA_character_ else as.character(front[[2]][row])
 }
 
-submission_dir <- function(cfg, version = cfg$submission$version) {
-  data_dir(cfg$programme, "submissions", cfg$year, paste0("v", version))
+# The year's folder, e.g. Marina/Marina 2025/. Without FMCOM_SUBMISSION_DIR,
+# output/submissions/ in the project (gitignored), e.g. for testing.
+submission_year_dir <- function(cfg) {
+  folder <- cfg$submission$folder
+  if (is.null(folder)) {
+    stop("Set `submission: folder:` in config/", cfg$programme, ".yml (e.g. Marina).", call. = FALSE)
+  }
+  root <- Sys.getenv("FMCOM_SUBMISSION_DIR", unset = here::here("output", "submissions"))
+  file.path(root, folder, paste(folder, cfg$year))
 }
 
-# SGU's rules allow no spaces in the file name
-submission_file_name <- function(cfg, template, version = cfg$submission$version) {
-  paste0(tools::file_path_sans_ext(basename(template)), "_", cfg$run_name, "_v", version, ".xlsx")
+submission_dir <- function(cfg, version = cfg$submission$version) {
+  file.path(submission_year_dir(cfg), paste0("v", version))
+}
+
+# SGU's rules allow no spaces in the file name. Kept short: Windows paths
+# can't be longer than 260 characters, and the SGU folder is on a network drive.
+submission_file_name <- function(cfg, version = cfg$submission$version) {
+  paste0("SGU_", cfg$run_name, "_v", version, ".xlsx")
 }
 
 receipts <- function(dir) list.files(dir, pattern = "\\.msg$", ignore.case = TRUE)
@@ -76,12 +90,12 @@ check_submission_version <- function(cfg) {
 }
 
 # The latest earlier version with a receipt, and its submission file
-last_submitted <- function(cfg, template) {
+last_submitted <- function(cfg) {
   earlier <- rev(seq_len(cfg$submission$version - 1))
   for (v in earlier) {
     dir <- submission_dir(cfg, v)
     if (length(receipts(dir)) == 0) next
-    file <- file.path(dir, submission_file_name(cfg, template, v))
+    file <- file.path(dir, submission_file_name(cfg, v))
     if (!file.exists(file)) {
       xlsx <- list.files(dir, pattern = "\\.xlsx$", full.names = TRUE)
       xlsx <- xlsx[!startsWith(basename(xlsx), "~$")]
@@ -162,7 +176,14 @@ write_submission <- function(cfg, sheets, template, file) {
   if (length(message_lines) > 0) {
     write_rows("MEDDELANDE", tibble::tibble(MEDDEL = as.character(message_lines)))
   }
+  started <- Sys.time()
   openxlsx::saveWorkbook(wb, file, overwrite = TRUE)
+  # saveWorkbook() fails silently, e.g. when the path is too long for Windows
+  if (!file.exists(file) || file.mtime(file) < started - 1) {
+    stop("The submission file was not written: ", file, " (", nchar(file), " characters; ",
+         "Windows allows 260). Use a shorter FMCOM_SUBMISSION_DIR or check that the folder ",
+         "is writable and the file is not open in Excel.", call. = FALSE)
+  }
   invisible(file)
 }
 
@@ -215,7 +236,8 @@ submission_log_file <- function(cfg) {
 
 # Versions of this year with a receipt but no row in the log
 unlogged_submissions <- function(cfg) {
-  dirs <- list.dirs(data_dir(cfg$programme, "submissions", cfg$year), recursive = FALSE)
+  dirs <- list.dirs(submission_year_dir(cfg), recursive = FALSE)
+  dirs <- dirs[grepl("^v[0-9]+$", basename(dirs))]   # other folders in the year's folder are left alone
   submitted <- basename(dirs)[vapply(dirs, function(d) length(receipts(d)) > 0, logical(1))]
   log <- utils::read.csv(submission_log_file(cfg), colClasses = "character")
   logged <- paste0("v", log$version[log$year == cfg$year])

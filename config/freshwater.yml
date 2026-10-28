@@ -90,6 +90,9 @@ submission:
   # Set by hand: 1 for the first submission; raise it only to resubmit after
   # an upload. Re-runs replace the version's files until its receipt is saved.
   version: 1
+  # Folder in the SGU folder (FMCOM_SUBMISSION_DIR); output goes to
+  # <folder>/<folder> <year>/v<version>/, e.g. Limniska/Limniska 2024/v1/
+  folder: Limniska
   # Can be a later extract than the report's. Same format as
   # raw_data: esbase_file:
   esbase_file: freshwater/esbase/Biologdata_fcom24_uppdaterade_aldrar.xlsx

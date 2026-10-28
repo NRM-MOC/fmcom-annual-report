@@ -96,6 +96,9 @@ submission:
   # Set by hand: 1 for the first submission; raise it only to resubmit after
   # an upload. Re-runs replace the version's files until its receipt is saved.
   version: 1
+  # Folder in the SGU folder (FMCOM_SUBMISSION_DIR); output goes to
+  # <folder>/<folder> <year>/v<version>/, e.g. Marina/Marina 2025/v1/
+  folder: Marina
   # Often a later extract than the report's, with mussel and bird data. Same
   # format as raw_data: esbase_file:
   esbase_file: marine/esbase/Marina 2025 fiskar.xlsx
